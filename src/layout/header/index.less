@@ -1,0 +1,151 @@
+.header-container{
+  height: 66px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  &.fixedHeader{
+    position: fixed;
+    z-index: 200;
+    left: 250px;
+    right: 0;
+  }
+  &.fixedHeader.collapsed{
+    left: 80px;
+  }
+  .left-box{
+    .hamburger-container{
+      display: inline-block;
+      font-size: 20px;
+      line-height: 66px;
+      padding: 0 20px;
+      cursor: pointer;
+    }
+  }
+  .right-menu{
+    padding-right: 20px;
+    .ant-dropdown-link{
+      display: inline-block;
+      position: relative;
+      img{
+        margin-top: 15px;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        border-radius: 10px;
+        margin-right: 5px;
+      }
+      span{
+        position: absolute;
+        bottom: 0;
+        right: -15px;
+        color: #5a5e66;
+      }
+    }
+  }
+  &.bg-primary{
+    color: #fff;
+    background: #4a89dc;
+    .right-menu{
+      .ant-dropdown-link{
+        span{
+          color: #fff;
+        }
+      }
+    }
+  }
+  &.bg-light{
+    background: #fff;
+  }
+  &.bg-info{
+    color: #fff;
+    background: #00bcd4;
+    .right-menu{
+      .ant-dropdown-link{
+        span{
+          color: #fff;
+        }
+      }
+    }
+  }
+  &.bg-warning{
+    color: #fff;
+    background: #ffc107;
+    .right-menu{
+      .ant-dropdown-link{
+        span{
+          color: #fff;
+        }
+      }
+    }
+  }
+  &.bg-danger{
+    color: #fff;
+    background: #f44336;
+    .right-menu{
+      .ant-dropdown-link{
+        span{
+          color: #fff;
+        }
+      }
+    }
+  }
+  &.bg-alert{
+    color: #fff;
+    background: #a992e2;
+    .right-menu{
+      .ant-dropdown-link{
+        span{
+          color: #fff;
+        }
+      }
+    }
+  }
+  &.bg-system{
+    color: #fff;
+    background: #48c9a9;
+    .right-menu{
+      .ant-dropdown-link{
+        span{
+          color: #fff;
+        }
+      }
+    }
+  }
+  &.bg-success{
+    color: #fff;
+    background: #85d27a;
+    .right-menu{
+      .ant-dropdown-link{
+        span{
+          color: #fff;
+        }
+      }
+    }
+  }
+  &.bg-grey{
+    color: #fff;
+    background: #30363e;
+    .right-menu{
+      .ant-dropdown-link{
+        span{
+          color: #fff;
+        }
+      }
+    }
+  }
+  &.bg-dark{
+    color: #fff;
+    background: #001529;
+    .right-menu{
+      .ant-dropdown-link{
+        span{
+          color: #fff;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+.operate-column span{
+    margin-right: 10px;
+    cursor: pointer;
+}
+.operate-column span:last-child{
+    margin-right: 0;
+}
+.operate-edit{
+    color: #126ac6;
+}
+.operate-del{
+    color: #f81d22;
+}
+
+.w100{
+    width: 100%;
+}
+.active{
+    color: #1890ff
+}
