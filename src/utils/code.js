@@ -1,6 +1,6 @@
 const RES_STATUS = {
-    SUCCESS_CODE: '00'
-}
+    SUCCESS_STATUS: 200
+};
 export {
     RES_STATUS
 }

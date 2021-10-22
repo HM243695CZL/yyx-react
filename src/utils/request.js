@@ -48,7 +48,6 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
     response => {
-        response.rsp = response.data.content;
         closeLoading();
         if(response.data.status === 401) {
             // token超时，跳转到登录

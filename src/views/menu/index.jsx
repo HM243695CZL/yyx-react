@@ -21,17 +21,19 @@ class Menu extends Component {
         getMenuListApi({
             page: 0,
             size: 10
-        }).then(({rsp}) => {
-            const data = arrayToTree(rsp.data.list, 'id', 'parentId');
-            data.map(item => {
-                if(item.children && item.children.length) {
-                    item.children.sort(objectArraySort('sortNum'))
-                }
-            });
-            data.sort(objectArraySort('sortNum'));
-            this.setState({
-                dataList: data
-            });
+        }).then(res => {
+            if (res.status === RES_STATUS.SUCCESS_STATUS) {
+                const data = arrayToTree(res.data, 'id', 'parentId');
+                data.map(item => {
+                    if(item.children && item.children.length) {
+                        item.children.sort(objectArraySort('sortNum'))
+                    }
+                });
+                data.sort(objectArraySort('sortNum'));
+                this.setState({
+                    dataList: data
+                });
+            }
         })
     }
     render() {
@@ -114,35 +116,29 @@ class Menu extends Component {
                     if (rsp.head.errorCode === RES_STATUS.SUCCESS_CODE) {
                         message.success('操作成功');
                         this.getDataList();
-                    } else {
-                        message.error(rsp.data.errMessage);
                     }
                 })
             }
         };
         const confirm = val => {
             if(val.id) {
-                editMenuApi(val).then(({rsp}) => {
-                    if(rsp.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+                editMenuApi(val).then(res => {
+                    if(res.status === RES_STATUS.SUCCESS_STATUS) {
                         message.success('操作成功');
                         this.getDataList();
                         this.setState({
                             visibleModal: false
                         });
-                    } else {
-                        message.error(rsp.data.errMessage);
                     }
                 })
             } else {
-                saveMenuApi(val).then(({rsp}) => {
-                    if(rsp.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+                saveMenuApi(val).then(res => {
+                    if(res.status === RES_STATUS.SUCCESS_STATUS) {
                         message.success('操作成功');
                         this.getDataList();
                         this.setState({
                             visibleModal: false
                         });
-                    } else {
-                        message.error(rsp.data.errMessage);
                     }
                 })
             }

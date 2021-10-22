@@ -10,7 +10,7 @@ export function getMenuListApi(data) {
 
 export function saveMenuApi(data) {
     return request({
-        url: '/menu/save',
+        url: '/menu/create',
         method: 'post',
         data: request.adornData(data)
     })

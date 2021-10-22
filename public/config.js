@@ -1,2 +1,2 @@
 var PLATFORM_CONFIG = {}
-PLATFORM_CONFIG.baseUrl = 'http://127.0.0.1:3002'
+PLATFORM_CONFIG.baseUrl = 'http://127.0.0.1:7001'
