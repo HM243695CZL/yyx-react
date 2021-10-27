@@ -22,7 +22,7 @@ class Menu extends Component {
             page: 0,
             size: 10
         }).then(res => {
-            if (res.status === RES_STATUS.SUCCESS_STATUS) {
+            if (res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
                 const data = arrayToTree(res.data, 'id', 'parentId');
                 data.map(item => {
                     if(item.children && item.children.length) {
@@ -112,10 +112,12 @@ class Menu extends Component {
         };
         const delMenu = ({id}) => {
             return e => {
-                delMenuApi({id}).then(({rsp}) => {
-                    if (rsp.head.errorCode === RES_STATUS.SUCCESS_CODE) {
-                        message.success('操作成功');
+                delMenuApi({id}).then(res => {
+                    if (res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+                        message.success(res.message);
                         this.getDataList();
+                    } else {
+                        message.error(res.message);
                     }
                 })
             }
@@ -123,22 +125,26 @@ class Menu extends Component {
         const confirm = val => {
             if(val.id) {
                 editMenuApi(val).then(res => {
-                    if(res.status === RES_STATUS.SUCCESS_STATUS) {
-                        message.success('操作成功');
+                    if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+                        message.success(res.message);
                         this.getDataList();
                         this.setState({
                             visibleModal: false
                         });
+                    } else {
+                        message.error(res.message);
                     }
                 })
             } else {
                 saveMenuApi(val).then(res => {
-                    if(res.status === RES_STATUS.SUCCESS_STATUS) {
-                        message.success('操作成功');
+                    if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+                        message.success(res.message);
                         this.getDataList();
                         this.setState({
                             visibleModal: false
                         });
+                    } else {
+                        message.error(res.message);
                     }
                 })
             }

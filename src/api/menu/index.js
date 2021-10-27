@@ -26,7 +26,7 @@ export function editMenuApi(data) {
 
 export function delMenuApi(data) {
     return request({
-        url: '/menu/del',
+        url: '/menu/delete',
         method: 'post',
         data: request.adornData(data)
     })

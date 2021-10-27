@@ -57,7 +57,7 @@ service.interceptors.response.use(
                 window.location.reload();
             }, 1000)
         }
-        return response;
+        return response.data;
     },
     error => {
         closeLoading();

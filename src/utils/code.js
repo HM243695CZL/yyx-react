@@ -1,5 +1,5 @@
 const RES_STATUS = {
-    SUCCESS_STATUS: 200
+    SUCCESS_CODE: 200
 };
 export {
     RES_STATUS
