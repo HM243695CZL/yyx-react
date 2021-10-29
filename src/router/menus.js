@@ -1,111 +1,36 @@
 export const menus = [
     {
-        "id": "06022b20-e2dc-11eb-b7b5-89e57ef68685",
-        "title": "图表",
-        "path": "/chart",
-        "icon": "fa fa-area-chart",
-        "type": 2,
-        "sortNum": 2,
-        "parentId": null,
-        "hidden": 0,
-        "keepAlive": null,
-        "createTime": "2021-07-12 14:40:18",
-        "key": "06022b20-e2dc-11eb-b7b5-89e57ef68685"
-    }, {
-        "id": "1",
+        "id": "8f3ca4d0-378f-11ec-8c38-5dac532fb834",
         "title": "菜单管理",
         "path": "/menu",
-        "icon": "fa fa-user",
+        "icon": "fa fa-bars",
         "type": 1,
         "sortNum": 2,
-        "parentId": "",
-        "hidden": 0,
-        "keepAlive": 0,
-        "createTime": "2021-06-28 17:36:19",
-        "key": "1"
-    }, {
-        "id": "25764190-e3a8-11eb-a1c3-3b0590ee9734",
-        "title": "表格",
-        "path": "/table",
-        "icon": "fa fa-table",
-        "type": 1,
-        "sortNum": 3,
         "parentId": null,
         "hidden": null,
-        "keepAlive": null,
-        "createTime": "2021-07-13 15:01:28",
-        "key": "25764190-e3a8-11eb-a1c3-3b0590ee9734"
+        "keepAlive": 1,
+        "createTime": "2021-10-28T01:37:06.000Z"
     }, {
-        "id": "52241360-e2eb-11eb-9a91-dba814f8d236",
-        "title": "错误页面",
-        "path": "/error",
-        "icon": "fa fa-bell-slash",
-        "type": 1,
-        "sortNum": 10,
+        "id": "daeeb470-37c3-11ec-a980-c34121312e79",
+        "title": "用户列表",
+        "path": "/user",
+        "icon": "fa fa-user",
+        "type": null,
+        "sortNum": 2,
         "parentId": null,
-        "hidden": 1,
-        "keepAlive": null,
-        "createTime": "2021-07-12 16:29:48",
-        "key": "52241360-e2eb-11eb-9a91-dba814f8d236"
-    }, {
-        "id": "62dfaac0-e2dc-11eb-b7b5-89e57ef68685",
-        "title": "折线图",
-        "path": "/chart/line",
-        "icon": "fa fa-line-chart",
-        "type": 1,
-        "sortNum": 3,
-        "parentId": "06022b20-e2dc-11eb-b7b5-89e57ef68685",
         "hidden": null,
-        "keepAlive": null,
-        "createTime": "2021-07-12 14:42:54",
-        "key": "62dfaac0-e2dc-11eb-b7b5-89e57ef68685"
+        "keepAlive": 1,
+        "createTime": "2021-10-28T07:51:27.000Z"
     }, {
-        "id": "6fe13330-e384-11eb-a1c3-3b0590ee9734",
+        "id": "f0bdbbe0-378f-11ec-8c38-5dac532fb834",
         "title": "首页",
         "path": "/dashboard",
         "icon": "fa fa-home",
-        "type": 1,
+        "type": null,
         "sortNum": 1,
         "parentId": null,
         "hidden": null,
-        "keepAlive": null,
-        "createTime": "2021-07-13 10:45:51",
-        "key": "6fe13330-e384-11eb-a1c3-3b0590ee9734"
-    }, {
-        "id": "7c118ea0-e2dc-11eb-b7b5-89e57ef68685",
-        "title": "键盘图表",
-        "path": "/chart/keyboard",
-        "icon": "fa fa-barcode",
-        "type": 1,
-        "sortNum": 2,
-        "parentId": "06022b20-e2dc-11eb-b7b5-89e57ef68685",
-        "hidden": null,
-        "keepAlive": null,
-        "createTime": "2021-07-12 14:43:36",
-        "key": "7c118ea0-e2dc-11eb-b7b5-89e57ef68685"
-    }, {
-        "id": "873ee2a0-e2dc-11eb-b7b5-89e57ef68685",
-        "title": "混合图表",
-        "path": "/chart/mixchart",
-        "icon": "fa fa-pie-chart",
-        "type": 1,
-        "sortNum": 1,
-        "parentId": "06022b20-e2dc-11eb-b7b5-89e57ef68685",
-        "hidden": null,
-        "keepAlive": null,
-        "createTime": "2021-07-12 14:43:55",
-        "key": "873ee2a0-e2dc-11eb-b7b5-89e57ef68685"
-    }, {
-        "id": "d827b7d0-e3a6-11eb-a1c3-3b0590ee9734",
-        "title": "测试",
-        "path": "/test",
-        "icon": "fa fa-text-width",
-        "type": 1,
-        "sortNum": 10,
-        "parentId": null,
-        "hidden": null,
-        "keepAlive": null,
-        "createTime": "2021-07-13 14:52:09",
-        "key": "d827b7d0-e3a6-11eb-a1c3-3b0590ee9734"
+        "keepAlive": 0,
+        "createTime": "2021-10-28T01:39:50.000Z"
     }
 ];

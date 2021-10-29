@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Form, Input, Button} from 'antd';
+import {message} from 'antd';
 import Particles from 'react-particles-js';
 import PropTypes from 'prop-types'
 import {login} from '@/store/actions';
@@ -21,16 +22,18 @@ class Login extends Component {
     };
 
     handleSubmit = val => {
-        const {username} = val;
-        this.login({username, userId: 1})
+        const {username, password} = val;
+        this.login({username, password})
     };
 
     login = formVal => {
         const {handleLogin} = this.props;
-        handleLogin(formVal).then(res=> {
+        handleLogin(formVal).then(res => {
             if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
                 // 获取菜单列表
                 this.getMenuList();
+            } else {
+                message.error(res.message);
             }
         });
     };
@@ -39,18 +42,20 @@ class Login extends Component {
         getMenuListApi({
             page: 0,
             size: 20
-        }).then(({rsp}) => {
-            let data = arrayToTree(rsp.data.list, 'id', 'parentId')
-            data.map(item => {
-                if(item.children && item.children.length) {
-                    item.children.sort(objectArraySort('sortNum'))
-                }
-            });
-            setMenu(JSON.stringify(data.sort(objectArraySort('sortNum'))));
-            const {history} = this.props;
-            history.replace('/dashboard');
-            // 通过重新刷新来实现路由表的渲染
-            window.location.reload();
+        }).then(res => {
+            if (res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+                let data = arrayToTree(res.data, 'id', 'parentId')
+                data.map(item => {
+                    if(item.children && item.children.length) {
+                        item.children.sort(objectArraySort('sortNum'))
+                    }
+                });
+                setMenu(JSON.stringify(data.sort(objectArraySort('sortNum'))));
+                const {history} = this.props;
+                history.replace('/dashboard');
+                // 通过重新刷新来实现路由表的渲染
+                window.location.reload();
+            }
         })
     };
 
@@ -78,7 +83,8 @@ class Login extends Component {
                         {...layout}
                         name="basic"
                         initialValues={{
-                            ['username']: 'admin'
+                            ['username']: '',
+                            ['password']: ''
                         }}
                         onFinish={this.handleSubmit}
                     >
@@ -95,8 +101,21 @@ class Login extends Component {
                             <Input autoComplete='off'
                                    name='username' />
                         </Form.Item>
+                        <Form.Item
+                            label="密码"
+                            name='password'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: '请输入密码'
+                                }
+                            ]}
+                        >
+                            <Input autoComplete='off'
+                                   name='password' />
+                        </Form.Item>
                         <Form.Item {...tailLayout}>
-                            <Button type="primary" htmlType="submit">
+                            <Button type="primary" htmlType="submit" className='login-btn'>
                                 登录
                             </Button>
                         </Form.Item>

@@ -8,19 +8,19 @@ const login = params => dispatch => {
      * 登录获取token
      */
     return new Promise(resolve => {
-        loginApi(params).then(({rsp}) => {
-            if(rsp.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+        loginApi(params).then(res => {
+            if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
                 dispatch({
                     type: SET_TOKEN,
-                    payload: rsp.data.token
+                    payload: res.data.token
                 });
                 dispatch({
                     type: SET_USER_INFO,
-                    payload: rsp.data.userInfo
+                    payload: res.data.userInfo
                 });
-                localStorage.setItem('token', rsp.data.token);
+                localStorage.setItem('token', res.data.token);
             }
-            resolve(rsp);
+            resolve(res);
         })
     })
 };

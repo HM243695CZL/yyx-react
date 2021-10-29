@@ -8,3 +8,10 @@ export function loginApi(data) {
     });
 }
 
+export function getUserListApi(data) {
+    return request({
+        url: '/user/list',
+        method: 'post',
+        data: request.adornData(data)
+    })
+}
