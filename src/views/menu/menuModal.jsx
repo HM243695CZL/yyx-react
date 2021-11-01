@@ -1,11 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import {Modal, Form, Input, Select, Switch, TreeSelect, Radio, InputNumber} from 'antd';
-import {getMenuListApi} from '@/api/menu';
-import {arrayToTree} from '@/utils';
+import React, { useEffect, useState } from 'react';
+import { Modal, Form, Input, Select, Switch,
+    TreeSelect, Radio, InputNumber
+} from 'antd';
+import { getMenuListApi } from '@/api/menu';
+import { arrayToTree } from '@/utils';
 
-const {Item} = Form;
+const { Item } = Form;
 
-const OperateMenu = ({
+const MenuModal = ({
     isShow,
     title,
     confirm,
@@ -38,7 +40,7 @@ const OperateMenu = ({
         })
     };
     return (
-        <div className='operate-menu-container'>
+        <div className='menu-modal-container'>
             <Modal
                 title={title}
                 visible={isShow}
@@ -133,4 +135,4 @@ const OperateMenu = ({
     )
 };
 
-export default OperateMenu
+export default MenuModal

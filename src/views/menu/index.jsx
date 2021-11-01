@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button, message, Table, Tag} from 'antd';
 import {getMenuListApi, saveMenuApi, delMenuApi, editMenuApi} from '@/api/menu';
 import './index.less'
-import OperateMenu from './operateMenu'
+import MenuModal from './menuModal'
 import {RES_STATUS} from '@/utils/code';
 import {arrayToTree, objectArraySort} from '@/utils';
 class Menu extends Component {
@@ -165,7 +165,7 @@ class Menu extends Component {
                     columns={columns}
                     dataSource={dataList}
                     bordered/>
-                <OperateMenu
+                <MenuModal
                     title={title}
                     isShow={visibleModal}
                     rowData={rowData}

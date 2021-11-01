@@ -1,15 +1,24 @@
 import React, {Component} from 'react';
-import {Tag, Table, Button} from 'antd';
-import {getUserListApi} from '@/api/user';
-import './index.less';
+import UserModal from './userModal';
+import {Tag, Table, Button, message} from 'antd';
+import {getUserListApi, saveUserApi, updateUserApi, deleteUserApi} from '@/api/user';
 import {RES_STATUS} from '@/utils/code';
-class User extends Component{
+import Pagination from '@/components/Pagination';
+import './index.less';
+
+class User extends Component {
     state = {
-      dataList: []
+        dataList: [],
+        total: 0,
+        title: '',
+        userId: '',
+        isVisible: false
     };
+
     componentWillMount() {
         this.getDataList();
     }
+
     getDataList() {
         getUserListApi({
             page: 0,
@@ -17,14 +26,15 @@ class User extends Component{
         }).then(res => {
             if (res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
                 this.setState({
-                    dataList: res.data
+                    dataList: res.data,
+                    total: res.total
                 })
             }
         })
     }
 
     render() {
-        const { dataList } = this.state;
+        const { dataList, title, isVisible, userId, total } = this.state;
         const columns = [
             {
                 title: '用户名',
@@ -54,26 +64,108 @@ class User extends Component{
                 render(data) {
                     return (
                         <div className='operate-column'>
-                            <span className='operate-edit'>修改</span>
-                            <span className="operate-del">删除</span>
+                            <span className='operate-edit' onClick={showModal(data)}>修改</span>
+                            <span className="operate-del" onClick={delUser(data)}>删除</span>
                         </div>
                     )
                 }
             }
         ];
+        const showModal = data => {
+          return e => {
+              if (data) {
+                  // 修改
+                  this.setState({
+                      isVisible: true,
+                      title: '修改用户',
+                      userId: data.user_id
+                  })
+              } else {
+                  // 新增
+                  this.setState({
+                      isVisible: true,
+                      title: '新增用户',
+                      userId: null
+                  })
+              }
+          }
+        };
+        const delUser = ({user_id}) => {
+          return e => {
+              deleteUserApi({user_id}).then(res => {
+                  if (res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+                      message.success(res.message);
+                      this.getDataList();
+                  } else {
+                      message.error(res.message);
+                  }
+              })
+          }
+        };
+        const confirm = val => {
+            if (val.user_id) {
+                updateUserApi(val).then(res => {
+                    if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+                        message.success(res.message);
+                        this.getDataList();
+                        this.setState({
+                            isVisible: false
+                        });
+                    } else {
+                        message.error(res.message);
+                    }
+                })
+            } else {
+                saveUserApi(val).then(res => {
+                    if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+                        message.success(res.message);
+                        this.getDataList();
+                        this.setState({
+                            isVisible: false
+                        });
+                    } else {
+                        message.error(res.message);
+                    }
+                })
+            }
+        };
+        const cancel = () => {
+            this.setState({
+                isVisible: false
+            })
+        };
         return (
             <div className='user-container'>
                 <div className="btn-box">
-                    <Button type='primary'>新增</Button>
+                    <Button type='primary' onClick={showModal()}>新增</Button>
                     <Button type='default' onClick={e => this.getDataList()}>查询</Button>
                 </div>
-                <Table
-                    columns={columns}
-                    dataSource={dataList}
-                    bordered
+                <Pagination>
+                    <Table
+                        columns={columns}
+                        dataSource={dataList}
+                        bordered
+                        pagination={{
+                            total,
+                            showSizeChanger: true,
+                            showTotal: total => `共${total}条`,
+                            onChange: (current, pageSize) => {
+                                console.log(current);
+                                console.log(pageSize);
+                            }
+                        }}
+                    />
+                </Pagination>
+                <UserModal
+                    title={title}
+                    isVisible={isVisible}
+                    id={userId}
+                    confirm={confirm}
+                    cancel={cancel}
                 />
             </div>
         )
     }
 }
+
 export default User
