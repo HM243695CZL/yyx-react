@@ -5,6 +5,7 @@ import 'antd/dist/antd.css';
 import 'font-awesome/css/font-awesome.css';
 import './App.css'
 import './index.css';
+import './assets/fonts/iconfont.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './antd-config';

@@ -14,7 +14,9 @@
     "css-animation": "^2.0.4",
     "customize-cra": "^1.0.0",
     "font-awesome": "^4.7.0",
+    "immutability-helper": "^3.1.1",
     "json-server": "^0.16.3",
+    "lodash": "^4.17.21",
     "merge": "^2.1.1",
     "mockjs": "^1.1.0",
     "normalize.css": "^8.0.1",
@@ -31,10 +33,12 @@
     "react-router-cache-route": "^1.11.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-sortablejs": "^6.0.0",
     "react-transition-group": "^4.4.2",
     "redux": "^4.1.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
+    "sortablejs": "^1.14.0",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
@@ -62,6 +66,7 @@
     ]
   },
   "devDependencies": {
+    "@types/sortablejs": "^1.10.7",
     "babel-plugin-import": "^1.13.3",
     "react-app-rewire-less": "^2.1.3"
   }
