@@ -162,6 +162,7 @@ class Menu extends Component {
                     <Button type='default' onClick={e => this.getDataList()}>查询</Button>
                 </div>
                 <Table
+                    rowKey={record => record.id}
                     columns={columns}
                     dataSource={dataList}
                     bordered/>

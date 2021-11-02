@@ -142,6 +142,7 @@ class User extends Component {
                 </div>
                 <Pagination>
                     <Table
+                        rowKey={record => record.user_id}
                         columns={columns}
                         dataSource={dataList}
                         bordered
