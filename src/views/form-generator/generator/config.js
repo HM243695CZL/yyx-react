@@ -3,14 +3,21 @@ export const inputComponents = [
     {
         config: {
             label: '单行文本',
+            labelAlign: 'left',
+            labelCol: {
+                span: 2
+            },
             labelWidth: null,
+            tooltip: '',
             showLabel: true,
             tag: 'Input',
             tagIcon: 'input',
             defaultValue: undefined,
             required: true,
             layout: 'colFormItem',
-            span: 24,
+            wrapperCol: {
+                span: 22
+            },
             regList: [
                 {
                     required: true,

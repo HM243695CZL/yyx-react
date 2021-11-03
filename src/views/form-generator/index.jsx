@@ -2,18 +2,19 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import './index.less';
 import cx from 'classnames';
-import {Input, Button, Form, Tabs} from 'antd';
+import {Button, Form, Input, Tabs} from 'antd';
 import {ReactSortable} from 'react-sortablejs';
 import uniqueId from 'lodash/uniqueId';
 import {cloneDeep} from 'lodash'
 import update from 'immutability-helper';
 import {inputComponents} from './generator/config';
+import CompAttr from './CompAttr'
 
 const GlobalComponent = {
     Input
 };
 const {Item} = Form;
-const {TabPane} = Tabs;
+const { TabPane } = Tabs;
 
 class FormGeneratorComponent extends Component {
     state = {
@@ -60,8 +61,13 @@ class FormGeneratorComponent extends Component {
                     >
                         <Item
                             label={item.config.label}
+                            // labelAlign={item.config.labelAlign}
+                            // labelCol={item.config.labelCol}
                             name={item.__vModel__}
                             rules={item.config.regList}
+                            tooltip={item.config.tooltip}
+                            initialValue={item.config.defaultValue}
+                            wrapperCol={item.config.wrapperCol}
                         >
                             <ComponentInfo {...item.attr} />
                         </Item>
@@ -73,14 +79,11 @@ class FormGeneratorComponent extends Component {
         const addComponents = item => {
             let arr = cloneDeep(drawingList);
             item.__vModel__ = `${uniqueId('field')}`;
-            const formId = `${uniqueId('form-id-')}`;
-            item.formId = formId;
+            item.formId = `${uniqueId('form-id-')}`;
             arr.push(item);
             this.setState({
                 ...this.state,
-                drawingList: arr,
-                activeId: formId,
-                activeItem: item
+                drawingList: arr
             });
         };
         const showData = () => {
@@ -92,6 +95,29 @@ class FormGeneratorComponent extends Component {
                 activeId: item.formId,
                 activeItem: item
             })
+        };
+        const changeFieldValue = data => {
+            let temp = {};
+            data.map(item => {
+                temp[item.name[0]] = item.value;
+            });
+            let activeTemp = cloneDeep(activeItem);
+            let tempDrawingList = cloneDeep(drawingList);
+            tempDrawingList.map((item, index) => {
+                if (item.formId === activeItem.formId) {
+                    activeTemp.__vModel__ = temp['__vModel__'];
+                    delete temp.__vModel__;
+                    activeTemp.config = {
+                        ...item.config,
+                        ...temp
+                    };
+                    tempDrawingList.splice(index, 1, activeTemp);
+                }
+            });
+            this.setState({
+                ...this.state,
+                drawingList: tempDrawingList
+            });
         };
         return (
             <div className='form-generator-container'>
@@ -167,7 +193,13 @@ class FormGeneratorComponent extends Component {
                 <div className="right-board">
                     <Tabs defaultActiveKey="1" centered>
                         <TabPane tab="组件属性" key="1">
-                            组件属性
+                            {
+                                JSON.stringify(activeItem) !== '{}' &&
+                                <CompAttr
+                                    activeItem={activeItem}
+                                    changeFieldValue={changeFieldValue}
+                                />
+                            }
                         </TabPane>
                         <TabPane tab="表单属性" key="2">
                             表单属性
