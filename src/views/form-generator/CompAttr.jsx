@@ -1,5 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {Tabs, Form, Input} from 'antd';
+import {Form, Input, Radio} from 'antd';
+import {
+    TextList, RadioList, InputList,
+    optionObj
+} from './generator/right-board-config';
 
 const {Item} = Form;
 const CompAttr = ({
@@ -7,12 +11,18 @@ const CompAttr = ({
     changeFieldValue
 }) => {
     const {
-        label
+        label,
+        labelAlign
     } = activeItem.config;
+    const {
+        placeholder
+    } = activeItem.attr;
     const [form] = Form.useForm();
     const initVal = {
         __vModel__: activeItem.__vModel__,
-        label
+        label,
+        placeholder,
+        labelAlign
     };
     const [init] = useState(initVal);
     useEffect(() => {
@@ -26,21 +36,44 @@ const CompAttr = ({
                 changeFieldValue(allFields);
             }}
             labelCol={{
-                span: 4
+                span: 8
             }}
         >
-            <Item
-                label='标题'
-                name='label'
-            >
-                <Input autoComplete='off'/>
-            </Item>
-            <Item
-                label='字段名'
-                name='__vModel__'
-            >
-                <Input autoComplete='off'/>
-            </Item>
+            {
+                TextList.map(item => {
+                    return (
+                        <div className='form-item' key={item.key}>
+                            {
+                                InputList.includes(item.key) && (
+                                    <Item
+                                        label={item.text}
+                                        name={item.key}
+                                        key={item.key}
+                                    >
+                                        <Input autoComplete='off'/>
+                                    </Item>
+                                )
+                            }
+                            {
+                                RadioList.includes(item.key) && (
+                                    <Item
+                                        label={item.text}
+                                        name={item.key}
+                                        key={item.key}
+                                    >
+                                        <Radio.Group
+                                            options={optionObj[item.key]}
+                                            value={labelAlign}
+                                            optionType="button"
+                                            buttonStyle="solid"
+                                        />
+                                    </Item>
+                                )
+                            }
+                        </div>
+                    )
+                })
+            }
         </Form>
     )
 };

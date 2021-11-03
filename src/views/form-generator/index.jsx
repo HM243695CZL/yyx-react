@@ -14,7 +14,7 @@ const GlobalComponent = {
     Input
 };
 const {Item} = Form;
-const { TabPane } = Tabs;
+const {TabPane} = Tabs;
 
 class FormGeneratorComponent extends Component {
     state = {
@@ -35,6 +35,7 @@ class FormGeneratorComponent extends Component {
         drawingList: [],
         activeId: '',
         activeItem: {},
+        attrArr: ['placeholder', 'style']
     };
     sortableAdd = evt => {
         console.log('add');
@@ -46,7 +47,10 @@ class FormGeneratorComponent extends Component {
     };
 
     render() {
-        const {leftComponents, drawingList, activeId, activeItem} = this.state;
+        const {
+            leftComponents, drawingList, activeId,
+            activeItem, attrArr
+        } = this.state;
         const loop = (arr, index) => {
             return arr.map((item, i) => {
                 const indexs = index === '' ? String(i) : `${index}-${i}`;
@@ -61,8 +65,7 @@ class FormGeneratorComponent extends Component {
                     >
                         <Item
                             label={item.config.label}
-                            // labelAlign={item.config.labelAlign}
-                            // labelCol={item.config.labelCol}
+                            labelAlign={item.config.labelAlign}
                             name={item.__vModel__}
                             rules={item.config.regList}
                             tooltip={item.config.tooltip}
@@ -83,7 +86,9 @@ class FormGeneratorComponent extends Component {
             arr.push(item);
             this.setState({
                 ...this.state,
-                drawingList: arr
+                drawingList: arr,
+                activeId: item.formId,
+                activeItem: item
             });
         };
         const showData = () => {
@@ -107,6 +112,17 @@ class FormGeneratorComponent extends Component {
                 if (item.formId === activeItem.formId) {
                     activeTemp.__vModel__ = temp['__vModel__'];
                     delete temp.__vModel__;
+                    attrArr.map(ele => {
+                        if (temp.hasOwnProperty(ele)) {
+                            let attrObj = {};
+                            attrObj[ele] = temp[ele];
+                            activeTemp.attr = {
+                                ...activeTemp.attr,
+                                ...attrObj
+                            };
+                            delete temp[ele]
+                        }
+                    });
                     activeTemp.config = {
                         ...item.config,
                         ...temp
