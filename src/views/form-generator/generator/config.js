@@ -5,15 +5,11 @@ export const inputComponents = [
             label: '单行文本',
             labelAlign: 'right',
             tooltip: '',
-            showLabel: true,
             tag: 'Input',
             tagIcon: 'input',
             defaultValue: undefined,
-            required: true,
             layout: 'colFormItem',
-            wrapperCol: {
-                span: 24
-            },
+            span: 24,
             regList: [
                 {
                     required: true,
@@ -25,7 +21,14 @@ export const inputComponents = [
             placeholder: '请输入',
             style: {
                 width: '100%'
-            }
+            },
+            addonBefore: '',
+            addonAfter: '',
+            allowClear: true,
+            bordered: true,
+            disabled: false,
+            maxLength: 50,
+            prefix: 'LikeOutlined'
         }
     }
 ];

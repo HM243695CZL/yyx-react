@@ -35,7 +35,11 @@ class FormGeneratorComponent extends Component {
         drawingList: [],
         activeId: '',
         activeItem: {},
-        attrArr: ['placeholder', 'style']
+        attrArr: [
+            'placeholder', 'style', 'addonBefore', 'addonAfter', 'allowClear',
+            'bordered', 'disabled', 'maxLength', 'prefix'
+        ],
+        needDelay: ['allowClear', 'bordered', 'disabled'], // 属性发生改变时，需要延迟加载的属性名
     };
     sortableAdd = evt => {
         console.log('add');
@@ -49,7 +53,7 @@ class FormGeneratorComponent extends Component {
     render() {
         const {
             leftComponents, drawingList, activeId,
-            activeItem, attrArr
+            activeItem, attrArr, needDelay
         } = this.state;
         const loop = (arr, index) => {
             return arr.map((item, i) => {
@@ -70,7 +74,9 @@ class FormGeneratorComponent extends Component {
                             rules={item.config.regList}
                             tooltip={item.config.tooltip}
                             initialValue={item.config.defaultValue}
-                            wrapperCol={item.config.wrapperCol}
+                            wrapperCol={{
+                                span: item.config.span
+                            }}
                         >
                             <ComponentInfo {...item.attr} />
                         </Item>
@@ -101,9 +107,9 @@ class FormGeneratorComponent extends Component {
                 activeItem: item
             })
         };
-        const changeFieldValue = data => {
+        const changeFieldValue = (changedFields, allFields) => {
             let temp = {};
-            data.map(item => {
+            allFields.map(item => {
                 temp[item.name[0]] = item.value;
             });
             let activeTemp = cloneDeep(activeItem);
@@ -128,6 +134,17 @@ class FormGeneratorComponent extends Component {
                         ...temp
                     };
                     tempDrawingList.splice(index, 1, activeTemp);
+                    if (needDelay.includes(changedFields[0].name[0])) {
+                        setTimeout(() => {
+                            // 这里不知道为什么不能改变选中项的switch组件
+                            // 只能延迟模拟调用changeActiveItem切换选项
+                            this.setState({
+                                ...this.state,
+                                activeId: activeTemp.formId,
+                                activeItem: activeTemp
+                            })
+                        }, 10);
+                    }
                 }
             });
             this.setState({
