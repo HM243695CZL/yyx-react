@@ -23,7 +23,8 @@ export const inputComponents = [
             allowClear: true,
             bordered: true,
             disabled: false,
-            maxLength: 50
+            maxLength: 50,
+            type: 'text'
         }
     },
     {

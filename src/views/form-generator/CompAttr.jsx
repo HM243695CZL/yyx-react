@@ -29,6 +29,7 @@ const CompAttr = ({
         bordered,
         disabled,
         maxLength,
+        type,
         showCount,
         rows,
     } = activeItem.attr;
@@ -47,6 +48,7 @@ const CompAttr = ({
         bordered,
         disabled,
         maxLength,
+        type,
         showCount,
         rows,
     };

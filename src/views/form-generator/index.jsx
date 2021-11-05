@@ -38,7 +38,7 @@ class FormGeneratorComponent extends Component {
         activeItem: {},
         attrArr: [
             'placeholder', 'style', 'addonBefore', 'addonAfter', 'allowClear',
-            'bordered', 'disabled', 'maxLength', 'showCount', 'rows'
+            'bordered', 'disabled', 'maxLength', 'type', 'showCount', 'rows'
         ],
         needDelay: [
             'allowClear', 'bordered', 'disabled', 'showCount',

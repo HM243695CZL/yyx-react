@@ -52,6 +52,10 @@ export const TextList = [
         text: '显示行数'
     },
     {
+        key: 'type',
+        text: '类型'
+    },
+    {
         key: 'maxLength',
         text: '最大长度'
     }
@@ -65,7 +69,7 @@ export const SwitchAttrList = [
     'allowClear', 'bordered', 'disabled', 'showCount'
 ];
 export const SwitchConfigList = ['required'];
-export const RadioList = ['labelAlign'];
+export const RadioList = ['labelAlign', 'type'];
 export const optionObj = {
     labelAlign: [
         {
@@ -75,6 +79,16 @@ export const optionObj = {
         {
             label: 'left',
             value: 'left'
+        }
+    ],
+    type: [
+        {
+            label: 'text',
+            value: 'text'
+        },
+        {
+            label: 'password',
+            value: 'password'
         }
     ]
 };
