@@ -3,10 +3,11 @@ import {
     Form, Input, Radio, Slider, Switch,
     InputNumber, Button, Modal
 } from 'antd';
-import {LikeOutlined, DeleteOutlined} from '@ant-design/icons';
+import {concat} from 'lodash';
 import {
-    TextList, RadioList, InputList, SwitchList, InputNumberList,
-    ButtonList, optionObj
+    TextList, RadioList, InputList, SwitchAttrList, InputNumberList,
+    SwitchConfigList,
+    optionObj
 } from './generator/right-board-config';
 import IconPanel from './IconPanel'
 const {Item} = Form;
@@ -17,7 +18,8 @@ const CompAttr = ({
     const {
         label,
         labelAlign,
-        span
+        span,
+        required,
     } = activeItem.config;
     const {
         placeholder,
@@ -27,7 +29,8 @@ const CompAttr = ({
         bordered,
         disabled,
         maxLength,
-        prefix
+        showCount,
+        rows,
     } = activeItem.attr;
     const [form] = Form.useForm();
     const initVal = {
@@ -35,6 +38,7 @@ const CompAttr = ({
         label,
         labelAlign,
         span,
+        required,
 
         placeholder,
         addonBefore,
@@ -43,14 +47,13 @@ const CompAttr = ({
         bordered,
         disabled,
         maxLength,
-        prefix
+        showCount,
+        rows,
     };
+    const activeConfigKeys = Object.keys(activeItem.config);
+    const activeAttrKeys = Object.keys(activeItem.attr);
+    const allKeys = concat(activeConfigKeys, activeAttrKeys);
     const [isShowIconModal, setIsShowIconModal] = useState(false);
-    const [currentIconPosition, setCurrentIconPosition] = useState('');
-    const showIconModal = data => {
-        setCurrentIconPosition(data);
-        setIsShowIconModal(true);
-    };
     const chooseIcon = data => {
         console.log(data.render.displayName);
         setIsShowIconModal(false);
@@ -85,82 +88,72 @@ const CompAttr = ({
                 </Item>
                 {
                     TextList.map(item => {
-                        return (
-                            <div className='form-item' key={item.key}>
-                                {
-                                    InputList.includes(item.key) && (
-                                        <Item
-                                            label={item.text}
-                                            name={item.key}
-                                            key={item.key}
-                                        >
-                                            <Input autoComplete='off'/>
-                                        </Item>
-                                    )
-                                }
-                                {
-                                    RadioList.includes(item.key) && (
-                                        <Item
-                                            label={item.text}
-                                            name={item.key}
-                                            key={item.key}
-                                        >
-                                            <Radio.Group
-                                                options={optionObj[item.key]}
-                                                value={labelAlign}
-                                                optionType="button"
-                                                buttonStyle="solid"
-                                            />
-                                        </Item>
-                                    )
-                                }
-                                {
-                                    SwitchList.includes(item.key) && (
-                                        <Item
-                                            label={item.text}
-                                            name={item.key}
-                                            key={item.key}
-                                        >
-                                            <Switch checked={activeItem.attr[item.key]}  />
-                                        </Item>
-                                    )
-                                }
-                                {
-                                    InputNumberList.includes(item.key) && (
-                                        <Item
-                                            label={item.text}
-                                            name={item.key}
-                                            key={item.key}
-                                        >
-                                            <InputNumber className='w100' />
-                                        </Item>
-                                    )
-                                }
-                                {
-                                    ButtonList.includes(item.key) && (
-                                        <Item
-                                            label={item.text}
-                                            name={item.key}
-                                            key={item.key}
-                                        >
-                                            <div className='button-box'>
-                                                <Button key='choose' name='choose' type='default' size='small'
-                                                        onClick={e => showIconModal(item.key)}
-                                                        icon={<LikeOutlined />}
-                                                >
-                                                    选择
-                                                </Button>
-                                                <Button key='delete' name='delete' type='default' size='small'
-                                                        icon={<DeleteOutlined />}
-                                                >
-                                                    删除
-                                                </Button>
-                                            </div>
-                                        </Item>
-                                    )
-                                }
-                            </div>
-                        )
+                        if(allKeys.includes(item.key)) {
+                            return (
+                                <div className='form-item' key={item.key}>
+                                    {
+                                        InputList.includes(item.key) && (
+                                            <Item
+                                                label={item.text}
+                                                name={item.key}
+                                                key={item.key}
+                                            >
+                                                <Input autoComplete='off' allowClear/>
+                                            </Item>
+                                        )
+                                    }
+                                    {
+                                        RadioList.includes(item.key) && (
+                                            <Item
+                                                label={item.text}
+                                                name={item.key}
+                                                key={item.key}
+                                            >
+                                                <Radio.Group
+                                                    options={optionObj[item.key]}
+                                                    value={labelAlign}
+                                                    optionType="button"
+                                                    buttonStyle="solid"
+                                                />
+                                            </Item>
+                                        )
+                                    }
+                                    {
+                                        SwitchAttrList.includes(item.key) && (
+                                            <Item
+                                                label={item.text}
+                                                name={item.key}
+                                                key={item.key}
+                                            >
+                                                <Switch checked={activeItem.attr[item.key]}  />
+                                            </Item>
+                                        )
+                                    }
+                                    {
+                                        SwitchConfigList.includes(item.key) && (
+                                            <Item
+                                                label={item.text}
+                                                name={item.key}
+                                                key={item.key}
+                                            >
+                                                <Switch checked={activeItem.config[item.key]}  />
+                                            </Item>
+                                        )
+                                    }
+                                    {
+                                        InputNumberList.includes(item.key) && (
+                                            <Item
+                                                label={item.text}
+                                                name={item.key}
+                                                key={item.key}
+                                            >
+                                                <InputNumber className='w100' />
+                                            </Item>
+                                        )
+                                    }
+                                </div>
+                            )
+                        }
                     })
                 }
             </Form>

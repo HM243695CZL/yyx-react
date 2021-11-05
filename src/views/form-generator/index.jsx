@@ -9,12 +9,13 @@ import {cloneDeep} from 'lodash'
 import update from 'immutability-helper';
 import {inputComponents} from './generator/config';
 import CompAttr from './CompAttr'
-
-const GlobalComponent = {
-    Input
-};
+const {TextArea} = Input;
 const {Item} = Form;
 const {TabPane} = Tabs;
+const GlobalComponent = {
+    Input,
+    TextArea
+};
 
 class FormGeneratorComponent extends Component {
     state = {
@@ -37,10 +38,18 @@ class FormGeneratorComponent extends Component {
         activeItem: {},
         attrArr: [
             'placeholder', 'style', 'addonBefore', 'addonAfter', 'allowClear',
-            'bordered', 'disabled', 'maxLength', 'prefix'
+            'bordered', 'disabled', 'maxLength', 'showCount', 'rows'
         ],
-        needDelay: ['allowClear', 'bordered', 'disabled'], // 属性发生改变时，需要延迟加载的属性名
+        needDelay: [
+            'allowClear', 'bordered', 'disabled', 'showCount',
+            'required'
+        ], // 属性发生改变时，需要延迟加载的属性名，如switch组件
     };
+
+    componentWillMount() {
+
+    }
+
     sortableAdd = evt => {
         console.log('add');
         console.log(evt);
@@ -71,7 +80,7 @@ class FormGeneratorComponent extends Component {
                             label={item.config.label}
                             labelAlign={item.config.labelAlign}
                             name={item.__vModel__}
-                            rules={item.config.regList}
+                            required={item.config.required}
                             tooltip={item.config.tooltip}
                             initialValue={item.config.defaultValue}
                             wrapperCol={{
@@ -111,6 +120,10 @@ class FormGeneratorComponent extends Component {
             let temp = {};
             allFields.map(item => {
                 temp[item.name[0]] = item.value;
+                // 将验证规则regList中的数据转为JSON格式
+                if (item.name[0] === 'regList') {
+                    temp.regList = JSON.parse(item.value);
+                }
             });
             let activeTemp = cloneDeep(activeItem);
             let tempDrawingList = cloneDeep(drawingList);
@@ -167,7 +180,7 @@ class FormGeneratorComponent extends Component {
                                         </div>
                                         <div className="component-drag">
                                             <ReactSortable
-                                                className='drag-item'
+                                                className='component-drag-box'
                                                 group={{
                                                     name: 'formItem',
                                                     pull: 'clone',
@@ -182,7 +195,7 @@ class FormGeneratorComponent extends Component {
                                                     item.list.map(ele => {
                                                         const classnames = cx('iconfont', 'icon-' + ele.config.tagIcon);
                                                         return (
-                                                            <div key={ele.config.tag} onClick={e => addComponents(ele)}>
+                                                            <div className='drag-item' key={ele.config.tag} onClick={e => addComponents(ele)}>
                                                                 <i className={classnames}/>
                                                                 {ele.config.label}
                                                             </div>

@@ -8,14 +8,10 @@ export const inputComponents = [
             tag: 'Input',
             tagIcon: 'input',
             defaultValue: undefined,
+            required: true,
             layout: 'colFormItem',
             span: 24,
-            regList: [
-                {
-                    required: true,
-                    message: '字段为空'
-                }
-            ]
+            regList: []
         },
         attr: {
             placeholder: '请输入',
@@ -27,8 +23,33 @@ export const inputComponents = [
             allowClear: true,
             bordered: true,
             disabled: false,
+            maxLength: 50
+        }
+    },
+    {
+        config: {
+            label: '多行文本',
+            labelAlign: 'right',
+            tooltip: '',
+            tag: 'TextArea',
+            tagIcon: 'textarea',
+            defaultValue: undefined,
+            required: true,
+            layout:'colFormItem',
+            span: 24,
+            regList: []
+        },
+        attr: {
+            placeholder: '请输入',
+            style: {
+                width: '100%'
+            },
+            allowClear: true,
+            bordered: true,
+            disabled: false,
+            showCount: false,
             maxLength: 50,
-            prefix: 'LikeOutlined'
+            rows: 3
         }
     }
 ];

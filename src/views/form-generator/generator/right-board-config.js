@@ -40,22 +40,32 @@ export const TextList = [
         text: '是否禁用'
     },
     {
-        key: 'maxLength',
-        text: '最大长度'
+        key: 'required',
+        text: '是否必填'
     },
     {
-        key: 'prefix',
-        text: '前图标'
+        key: 'showCount',
+        text: '显示字数'
+    },
+    {
+        key: 'rows',
+        text: '显示行数'
+    },
+    {
+        key: 'maxLength',
+        text: '最大长度'
     }
 ];
 export const InputList = [
     'label', '__vModel__', 'placeholder', 'tooltip',
     'addonBefore', 'addonAfter'
 ];
-export const InputNumberList = ['maxLength'];
-export const SwitchList = ['allowClear', 'bordered', 'disabled'];
+export const InputNumberList = ['maxLength', 'rows'];
+export const SwitchAttrList = [
+    'allowClear', 'bordered', 'disabled', 'showCount'
+];
+export const SwitchConfigList = ['required'];
 export const RadioList = ['labelAlign'];
-export const ButtonList = ['prefix'];
 export const optionObj = {
     labelAlign: [
         {
