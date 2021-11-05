@@ -89,6 +89,10 @@ export const optionObj = {
         {
             label: 'password',
             value: 'password'
+        },
+        {
+            label: 'number',
+            value: 'number'
         }
     ]
 };

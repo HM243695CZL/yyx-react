@@ -8,7 +8,7 @@ import uniqueId from 'lodash/uniqueId';
 import {cloneDeep} from 'lodash'
 import update from 'immutability-helper';
 import {inputComponents} from './generator/config';
-import CompAttr from './CompAttr'
+import CompAttr from './CompAttr';
 const {TextArea} = Input;
 const {Item} = Form;
 const {TabPane} = Tabs;
@@ -79,6 +79,9 @@ class FormGeneratorComponent extends Component {
                         <Item
                             label={item.config.label}
                             labelAlign={item.config.labelAlign}
+                            labelCol={{
+                                span: item.config.colSpan
+                            }}
                             name={item.__vModel__}
                             required={item.config.required}
                             tooltip={item.config.tooltip}
@@ -212,6 +215,10 @@ class FormGeneratorComponent extends Component {
                     <Button type='primary' onClick={e => showData()}>查看数据</Button>
                 </div>
                 <div className="center-board">
+                    <div className="action-bar">
+                        <Button type='default'>运行</Button>
+                        <Button type='default'>清空</Button>
+                    </div>
                     <Form>
                         <ReactSortable
                             className='form-item'

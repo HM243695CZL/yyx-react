@@ -11,6 +11,7 @@ export const inputComponents = [
             required: true,
             layout: 'colFormItem',
             span: 24,
+            colSpan: 4,
             regList: []
         },
         attr: {
@@ -38,6 +39,7 @@ export const inputComponents = [
             required: true,
             layout:'colFormItem',
             span: 24,
+            colSpan: 4,
             regList: []
         },
         attr: {

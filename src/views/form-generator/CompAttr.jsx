@@ -19,6 +19,7 @@ const CompAttr = ({
         label,
         labelAlign,
         span,
+        colSpan,
         required,
     } = activeItem.config;
     const {
@@ -39,6 +40,7 @@ const CompAttr = ({
         label,
         labelAlign,
         span,
+        colSpan,
         required,
 
         placeholder,
@@ -87,6 +89,15 @@ const CompAttr = ({
                     }}
                 >
                     <Slider min={0} max={24} />
+                </Item>
+                <Item
+                    label='label栅格'
+                    name='colSpan'
+                    wrapperCol={{
+                        span
+                    }}
+                >
+                    <Slider min={0} max={12} />
                 </Item>
                 {
                     TextList.map(item => {
