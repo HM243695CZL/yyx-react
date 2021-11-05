@@ -9,6 +9,7 @@ import {cloneDeep} from 'lodash'
 import update from 'immutability-helper';
 import {inputComponents} from './generator/config';
 import CompAttr from './CompAttr';
+import {ClearOutlined} from '@ant-design/icons';
 const {TextArea} = Input;
 const {Item} = Form;
 const {TabPane} = Tabs;
@@ -46,10 +47,6 @@ class FormGeneratorComponent extends Component {
         ], // 属性发生改变时，需要延迟加载的属性名，如switch组件
     };
 
-    componentWillMount() {
-
-    }
-
     sortableAdd = evt => {
         console.log('add');
         console.log(evt);
@@ -69,13 +66,17 @@ class FormGeneratorComponent extends Component {
                 const indexs = index === '' ? String(i) : `${index}-${i}`;
                 const ComponentInfo = GlobalComponent[item.config.tag];
                 const activeForm = cx({
-                    'active-form-item': item.formId === activeId
+                    'active-form-item': item.formId === activeId,
+                    'form-item-item': true
                 });
                 return (
                     <div data-id={indexs} key={indexs}
                          onClick={e => changeActiveItem(item)}
                          className={activeForm}
                     >
+                        <div className="clear-icon" onClick={e => clearDrawingList(e, item)}>
+                            <ClearOutlined />
+                        </div>
                         <Item
                             label={item.config.label}
                             labelAlign={item.config.labelAlign}
@@ -107,6 +108,36 @@ class FormGeneratorComponent extends Component {
                 drawingList: arr,
                 activeId: item.formId,
                 activeItem: item
+            });
+        };
+        // 清空组件
+        const emptyDrawingList = () => {
+            this.setState({
+                ...this.state,
+                drawingList: []
+            })
+        };
+        // 删除组件
+        const clearDrawingList = (e, item) => {
+            e.stopPropagation();
+            let originList = cloneDeep(drawingList);
+            originList.map((ele, index) => {
+                if (item.formId === ele.formId) {
+                    originList.splice(index, 1);
+                    this.setState({
+                        ...this.state,
+                        drawingList: originList
+                    }, () => {
+                        const arr = this.state.drawingList;
+                        if (arr.length) {
+                            this.setState({
+                                ...this.state,
+                                activeId: arr[arr.length - 1].formId,
+                                activeItem: arr[arr.length - 1]
+                            })
+                        }
+                    })
+                }
             });
         };
         const showData = () => {
@@ -217,7 +248,7 @@ class FormGeneratorComponent extends Component {
                 <div className="center-board">
                     <div className="action-bar">
                         <Button type='default'>运行</Button>
-                        <Button type='default'>清空</Button>
+                        <Button type='default' onClick={e => emptyDrawingList()}>清空</Button>
                     </div>
                     <Form>
                         <ReactSortable
