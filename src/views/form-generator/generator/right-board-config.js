@@ -8,6 +8,10 @@ export const TextList = [
         text: '字段名'
     },
     {
+        key: 'fieldDefaultValue',
+        text: '默认值'
+    },
+    {
         key: 'placeholder',
         text: '占位提示'
     },
@@ -62,7 +66,7 @@ export const TextList = [
 ];
 export const InputList = [
     'label', '__vModel__', 'placeholder', 'tooltip',
-    'addonBefore', 'addonAfter'
+    'addonBefore', 'addonAfter', 'fieldDefaultValue'
 ];
 export const InputNumberList = ['maxLength', 'rows'];
 export const SwitchAttrList = [

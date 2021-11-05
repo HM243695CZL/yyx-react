@@ -16,6 +16,7 @@ const CompAttr = ({
     changeFieldValue
 }) => {
     const {
+        fieldDefaultValue,
         label,
         labelAlign,
         span,
@@ -36,6 +37,7 @@ const CompAttr = ({
     } = activeItem.attr;
     const [form] = Form.useForm();
     const initVal = {
+        fieldDefaultValue,
         __vModel__: activeItem.__vModel__,
         label,
         labelAlign,
