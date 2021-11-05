@@ -2,13 +2,14 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import './index.less';
 import cx from 'classnames';
-import {Button, Form, Input, Tabs} from 'antd';
+import {Button, Form, Input, Tabs, message} from 'antd';
 import {ReactSortable} from 'react-sortablejs';
 import uniqueId from 'lodash/uniqueId';
 import {cloneDeep} from 'lodash'
 import update from 'immutability-helper';
 import {inputComponents} from './generator/config';
 import CompAttr from './CompAttr';
+import Preview from './Preview';
 import {ClearOutlined} from '@ant-design/icons';
 const {TextArea} = Input;
 const {Item} = Form;
@@ -45,6 +46,7 @@ class FormGeneratorComponent extends Component {
             'allowClear', 'bordered', 'disabled', 'showCount',
             'required'
         ], // 属性发生改变时，需要延迟加载的属性名，如switch组件
+        isVisiblePreview: false
     };
 
     sortableAdd = evt => {
@@ -59,7 +61,7 @@ class FormGeneratorComponent extends Component {
     render() {
         const {
             leftComponents, drawingList, activeId,
-            activeItem, attrArr, needDelay
+            activeItem, attrArr, needDelay, isVisiblePreview
         } = this.state;
         const loop = (arr, index) => {
             return arr.map((item, i) => {
@@ -143,6 +145,25 @@ class FormGeneratorComponent extends Component {
         const showData = () => {
             console.log(drawingList);
         };
+        // 点击运行
+        const showPreview = () => {
+            if(drawingList.length === 0) {
+                message.error('请至少添加一个组件');
+                return false;
+            }
+            this.setState({
+                ...this.state,
+                isVisiblePreview: true
+            })
+        };
+        // 关闭预览
+        const closePreview = () => {
+          this.setState({
+              ...this.state,
+              isVisiblePreview: false
+          })
+        };
+        // 切换选中项
         const changeActiveItem = item => {
             this.setState({
                 ...this.state,
@@ -247,7 +268,7 @@ class FormGeneratorComponent extends Component {
                 </div>
                 <div className="center-board">
                     <div className="action-bar">
-                        <Button type='default'>运行</Button>
+                        <Button type='default' onClick={e => showPreview()}>运行</Button>
                         <Button type='default' onClick={e => emptyDrawingList()}>清空</Button>
                     </div>
                     <Form>
@@ -290,6 +311,14 @@ class FormGeneratorComponent extends Component {
                         </TabPane>
                     </Tabs>
                 </div>
+                {
+                    isVisiblePreview &&
+                    <Preview
+                        renderList={drawingList}
+                        isVisiblePreview={isVisiblePreview}
+                        closePreview={closePreview}
+                    />
+                }
             </div>
         )
     }
