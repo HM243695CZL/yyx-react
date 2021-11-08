@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Form, Input} from 'antd';
 const {TextArea} = Input;
 const {Item} = Form;
@@ -7,8 +7,18 @@ const GlobalComponent = {
     TextArea
 };
 const RenderItem = ({
-    componentList
+    componentList,
+    changeFieldValue
 }) => {
+    const [form] = Form.useForm();
+    let initVal = {};
+    componentList.map(item => {
+        initVal[item.__vModel__] = item.config.fieldDefaultValue
+    });
+    const [init] = useState(initVal);
+    useEffect(() => {
+        form.setFieldsValue(initVal);
+    }, [componentList]);
     const loop = (arr, index) => {
         return arr.map((item, i) => {
             const indexs = index === '' ? String(i) : `${index}-${i}`;
@@ -37,7 +47,13 @@ const RenderItem = ({
     };
     return (
         <div className='render-item-container'>
-            <Form>
+            <Form
+                initialValues={init}
+                form={form}
+                onFieldsChange={(changedFields, allFields) => {
+                    changeFieldValue(changedFields, allFields);
+                }}
+            >
                 {
                     loop(componentList, '')
                 }

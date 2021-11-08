@@ -1,5 +1,5 @@
 import React from 'react';
-import {iconList} from './generator/icon-list';
+import {iconList} from '../generator/icon-list';
 import {uniqueId} from 'lodash';
 import './icon-panel.less';
 const IconPanel = ({

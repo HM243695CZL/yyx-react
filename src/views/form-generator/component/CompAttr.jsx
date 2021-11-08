@@ -8,8 +8,8 @@ import {
     TextList, RadioList, InputList, SwitchAttrList, InputNumberList,
     SwitchConfigList,
     optionObj
-} from './generator/right-board-config';
-import IconPanel from './IconPanel'
+} from '../generator/right-board-config';
+import IconPanel from '../icon-panel/IconPanel'
 const {Item} = Form;
 const CompAttr = ({
     activeItem,
@@ -100,6 +100,15 @@ const CompAttr = ({
                     }}
                 >
                     <Slider min={0} max={12} />
+                </Item>
+                <Item
+                    label='字段名'
+                    name='__vModel__'
+                    wrapperCol={{
+                        span
+                    }}
+                >
+                    <Input autoComplete='off' allowClear/>
                 </Item>
                 {
                     TextList.map(item => {

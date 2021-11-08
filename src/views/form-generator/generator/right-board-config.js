@@ -4,10 +4,6 @@ export const TextList = [
         text: '标题'
     },
     {
-        key: '__vModel__',
-        text: '字段名'
-    },
-    {
         key: 'fieldDefaultValue',
         text: '默认值'
     },
@@ -65,7 +61,7 @@ export const TextList = [
     }
 ];
 export const InputList = [
-    'label', '__vModel__', 'placeholder', 'tooltip',
+    'label', 'placeholder', 'tooltip',
     'addonBefore', 'addonAfter', 'fieldDefaultValue'
 ];
 export const InputNumberList = ['maxLength', 'rows'];
