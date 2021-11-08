@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {inputComponents} from '../generator/config';
 import {cloneDeep} from 'lodash';
 import uniqueId from 'lodash/uniqueId';
-import {Button, Form, Input, message, Tabs} from 'antd';
+import {Button, Form, Input, message, Tabs, Modal} from 'antd';
 import cx from 'classnames';
 import {ClearOutlined} from '@ant-design/icons';
 import {ReactSortable} from 'react-sortablejs';
@@ -19,6 +19,7 @@ const GlobalComponent = {
 const FormConfig = ({
     changeFlag
 }) => {
+    const [form] = Form.useForm();
     const [leftComponents] = useState([
         {
             title: '输入型组件',
@@ -46,7 +47,7 @@ const FormConfig = ({
         'required'
     ]); // 属性发生改变时，需要延迟加载的属性名，如switch组件
     const [isVisiblePreview, setIsVisiblePreview] = useState(false);
-
+    const [isVisibleForm, setIsVisibleForm] = useState(false);
 
     // 点击添加组件
     const addComponents = item => {
@@ -89,6 +90,16 @@ const FormConfig = ({
     // 关闭预览
     const closePreview = () => {
         setIsVisiblePreview(false);
+    };
+    // 显示保存配置弹窗
+    const showConfigForm = () => {
+        setIsVisibleForm(true);
+    };
+    // 保存配置
+    const saveConfig = () => {
+        form.validateFields().then(() => {
+            console.log(drawingList);
+        });
     };
     // 切换选中项
     const changeActiveItem = item => {
@@ -266,9 +277,42 @@ const FormConfig = ({
                 <Preview
                     renderList={drawingList}
                     isVisiblePreview={isVisiblePreview}
+                    showConfigForm={showConfigForm}
                     closePreview={closePreview}
                 />
             }
+            <Modal
+                title='保存配置'
+                visible={isVisibleForm}
+                okText='确定'
+                cancelText='取消'
+                onOk={e => saveConfig()}
+                onCancel={e => setIsVisibleForm(false)}
+                maskClosable={false}
+                width='650px'
+            >
+                <Form
+                    labelCol={{span: 8}}
+                    wrapperCol={{span: 16}}
+                    form={form}
+                    initialValues={{
+                        formName: ''
+                    }}
+                >
+                    <Item
+                        label='表单名称'
+                        name='formName'
+                        rules={[
+                            {
+                                required: true,
+                                message: '表单名称不能为空'
+                            }
+                        ]}
+                    >
+                        <Input/>
+                    </Item>
+                </Form>
+            </Modal>
         </div>
     )
 };
