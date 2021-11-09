@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {inputComponents} from '../generator/config';
 import {cloneDeep} from 'lodash';
 import uniqueId from 'lodash/uniqueId';
@@ -10,7 +10,7 @@ import html2canvas from 'html2canvas';
 import CompAttr from '../component/CompAttr';
 import Preview from '../component/Preview';
 import './form-config.less'
-import {saveFormConfigApi} from '@/api/formConfig';
+import {saveFormConfigApi, updateFormConfigApi} from '@/api/formConfig';
 import {RES_STATUS} from '@/utils/code';
 
 const {TextArea} = Input;
@@ -21,7 +21,8 @@ const GlobalComponent = {
     TextArea
 };
 const FormConfig = ({
-    changeFlag
+    changeFlag,
+    data
 }) => {
     const [form] = Form.useForm();
     const [leftComponents] = useState([
@@ -52,6 +53,10 @@ const FormConfig = ({
     ]); // 属性发生改变时，需要延迟加载的属性名，如switch组件
     const [isVisiblePreview, setIsVisiblePreview] = useState(false);
     const [isVisibleForm, setIsVisibleForm] = useState(false);
+    const [formCfg, setFormCfg] = useState({
+        name: '',
+        remark: ''
+    });
 
     // 点击添加组件
     const addComponents = item => {
@@ -111,18 +116,34 @@ const FormConfig = ({
                 useCORS: true,
             }).then(canvas => {
                 const screenShot = canvas.toDataURL('image/png');
-                saveFormConfigApi({
-                    ...val,
-                    screenShot,
-                    configData: JSON.stringify(drawingList)
-                }).then(res => {
-                    if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
-                        changeFlag();
-                        message.success(res.message);
-                    } else {
-                        message.error(res.message);
-                    }
-                })
+                if (data.id) {
+                    updateFormConfigApi({
+                        ...val,
+                        screenShot,
+                        configData: JSON.stringify(drawingList),
+                        id: data.id
+                    }).then(res => {
+                        if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+                            changeFlag();
+                            message.success(res.message);
+                        } else {
+                            message.error(res.message);
+                        }
+                    })
+                } else {
+                    saveFormConfigApi({
+                        ...val,
+                        screenShot,
+                        configData: JSON.stringify(drawingList)
+                    }).then(res => {
+                        if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+                            changeFlag();
+                            message.success(res.message);
+                        } else {
+                            message.error(res.message);
+                        }
+                    })
+                }
             });
         });
     };
@@ -206,6 +227,15 @@ const FormConfig = ({
             )
         })
     };
+    useEffect(() => {
+        if (data) {
+            setDrawingList(JSON.parse(data.configData));
+            setFormCfg({
+                name: data.name,
+                remark: data.remark
+            })
+        }
+    }, [data]);
     return (
         <div className='form-config-container'>
             <div className="left-board">
@@ -321,10 +351,7 @@ const FormConfig = ({
                     wrapperCol={{span: 20}}
                     form={form}
                     autoComplete='off'
-                    initialValues={{
-                        name: '',
-                        remark: ''
-                    }}
+                    initialValues={formCfg}
                 >
                     <Item
                         label='表单名称'

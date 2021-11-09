@@ -15,3 +15,19 @@ export function getFormConfigListApi(data) {
         data: request.adornData(data)
     })
 }
+
+export function deleteFormConfigApi(data) {
+    return request({
+        url: '/form-config/delete',
+        method: 'post',
+        data: request.adornData(data)
+    })
+}
+
+export function updateFormConfigApi(data) {
+    return request({
+        url: '/form-config/update',
+        method: 'post',
+        data: request.adornData(data)
+    })
+}
