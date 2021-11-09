@@ -1,24 +1,32 @@
 import React, {useState, useEffect} from 'react';
-import {Button, Table} from 'antd';
+import {Button, Table, Modal} from 'antd';
 import {getFormConfigListApi} from '@/api/formConfig';
 import {RES_STATUS} from '@/utils/code';
 import Pagination from '@/components/Pagination';
 import dayjs from 'dayjs';
 import './list.less';
-const List  = ({
-    changeFlag,
-    refresh
+
+const List = ({
+  changeFlag,
+  refresh
 }) => {
     const [dataList, setDataList] = useState([]);
     const [total, setTotal] = useState(0);
+    const [prevImgUrl, setPrevImgUrl] = useState(null);
+    const [isVisiblePreview, setIsVisiblePreview] = useState(false);
     const columns = [
         {
             title: '表单名称',
             dataIndex: 'name'
         },
         {
-          title: '备注',
-          dataIndex: 'remark'
+            title: '备注',
+            dataIndex: 'remark'
+        },
+        {
+            title: '缩略图',
+            dataIndex: 'screenShot',
+            render: data => <img onClick={e => previewImg(data)} className='img' src={data} title='缩略图' alt=''/>
         },
         {
             title: '创建时间',
@@ -44,12 +52,17 @@ const List  = ({
             changeFlag(data);
         }
     };
+    const previewImg = img => {
+        console.log(111);
+        setIsVisiblePreview(true);
+        setPrevImgUrl(img);
+    };
     const getDataList = () => {
         getFormConfigListApi({
             page: 0,
             size: 10
         }).then(res => {
-            if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+            if (res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
                 setDataList(res.data);
                 setTotal(res.total);
             }
@@ -81,6 +94,17 @@ const List  = ({
                     }}
                 />
             </Pagination>
+            <Modal
+                title='预览'
+                visible={isVisiblePreview}
+                maskClosable={false}
+                width='70%'
+                footer={[
+                    <Button type='primary' key='preview-img' onClick={e => setIsVisiblePreview(false)}>关闭</Button>
+                ]}
+            >
+                <img src={prevImgUrl} alt=""/>
+            </Modal>
         </div>
     )
 };

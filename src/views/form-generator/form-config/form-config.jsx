@@ -6,6 +6,7 @@ import {Button, Form, Input, message, Tabs, Modal} from 'antd';
 import cx from 'classnames';
 import {ClearOutlined} from '@ant-design/icons';
 import {ReactSortable} from 'react-sortablejs';
+import html2canvas from 'html2canvas';
 import CompAttr from '../component/CompAttr';
 import Preview from '../component/Preview';
 import './form-config.less'
@@ -105,17 +106,24 @@ const FormConfig = ({
     // 保存配置
     const saveConfig = () => {
         form.validateFields().then(val => {
-            saveFormConfigApi({
-                ...val,
-                configData: JSON.stringify(drawingList)
-            }).then(res => {
-                if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
-                    changeFlag();
-                    message.success(res.message);
-                } else {
-                    message.error(res.message);
-                }
-            })
+            html2canvas(document.querySelector('.form-item'), {
+                allowTaint: false,
+                useCORS: true,
+            }).then(canvas => {
+                const screenShot = canvas.toDataURL('image/png');
+                saveFormConfigApi({
+                    ...val,
+                    screenShot,
+                    configData: JSON.stringify(drawingList)
+                }).then(res => {
+                    if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+                        changeFlag();
+                        message.success(res.message);
+                    } else {
+                        message.error(res.message);
+                    }
+                })
+            });
         });
     };
     // 切换选中项
@@ -312,6 +320,7 @@ const FormConfig = ({
                     labelCol={{span: 4}}
                     wrapperCol={{span: 20}}
                     form={form}
+                    autoComplete='off'
                     initialValues={{
                         name: '',
                         remark: ''
