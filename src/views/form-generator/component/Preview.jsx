@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
-import {Modal, message} from 'antd';
+import {Modal, message, Button} from 'antd';
 import RenderItem from './RenderItem';
 
 const Preview = ({
     renderList,
     isVisiblePreview,
-    showConfigForm,
     closePreview,
 }) => {
     const [params, setParams] = useState({});
@@ -37,12 +36,11 @@ const Preview = ({
             <Modal
                 title='预览渲染'
                 visible={isVisiblePreview}
-                okText='确定'
-                cancelText='取消'
-                onOk={showConfigForm}
-                onCancel={closePreview}
                 maskClosable={false}
                 width='45%'
+                footer={[
+                    <Button key='close-preview' type='primary' onClick={e => closePreview()}>关闭</Button>
+                ]}
             >
                 <RenderItem
                     componentList={renderList}

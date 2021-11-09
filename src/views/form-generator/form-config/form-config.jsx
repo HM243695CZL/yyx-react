@@ -9,6 +9,9 @@ import {ReactSortable} from 'react-sortablejs';
 import CompAttr from '../component/CompAttr';
 import Preview from '../component/Preview';
 import './form-config.less'
+import {saveFormConfigApi} from '@/api/formConfig';
+import {RES_STATUS} from '@/utils/code';
+
 const {TextArea} = Input;
 const {Item} = Form;
 const {TabPane} = Tabs;
@@ -93,12 +96,26 @@ const FormConfig = ({
     };
     // 显示保存配置弹窗
     const showConfigForm = () => {
+        if(drawingList.length === 0) {
+            message.error('请至少添加一个组件');
+            return false;
+        }
         setIsVisibleForm(true);
     };
     // 保存配置
     const saveConfig = () => {
-        form.validateFields().then(() => {
-            console.log(drawingList);
+        form.validateFields().then(val => {
+            saveFormConfigApi({
+                ...val,
+                configData: JSON.stringify(drawingList)
+            }).then(res => {
+                if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+                    changeFlag();
+                    message.success(res.message);
+                } else {
+                    message.error(res.message);
+                }
+            })
         });
     };
     // 切换选中项
@@ -234,7 +251,8 @@ const FormConfig = ({
                         <Button type='default' onClick={e => emptyDrawingList()}>清空</Button>
                     </div>
                     <div className="right">
-                        <Button type='primary' onClick={e => changeFlag()}>返回</Button>
+                        <Button type='primary' onClick={e => showConfigForm()}>保存</Button>
+                        <Button type='default' onClick={e => changeFlag()}>返回</Button>
                     </div>
                 </div>
                 <Form>
@@ -277,7 +295,6 @@ const FormConfig = ({
                 <Preview
                     renderList={drawingList}
                     isVisiblePreview={isVisiblePreview}
-                    showConfigForm={showConfigForm}
                     closePreview={closePreview}
                 />
             }
@@ -292,22 +309,29 @@ const FormConfig = ({
                 width='650px'
             >
                 <Form
-                    labelCol={{span: 8}}
-                    wrapperCol={{span: 16}}
+                    labelCol={{span: 4}}
+                    wrapperCol={{span: 20}}
                     form={form}
                     initialValues={{
-                        formName: ''
+                        name: '',
+                        remark: ''
                     }}
                 >
                     <Item
                         label='表单名称'
-                        name='formName'
+                        name='name'
                         rules={[
                             {
                                 required: true,
                                 message: '表单名称不能为空'
                             }
                         ]}
+                    >
+                        <Input/>
+                    </Item>
+                    <Item
+                        label='备注'
+                        name='remark'
                     >
                         <Input/>
                     </Item>

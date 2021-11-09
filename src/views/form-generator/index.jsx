@@ -4,6 +4,7 @@ import FormConfig from './form-config/form-config';
 import List from './list';
 const FormGeneratorComponent = () => {
     const [showList, setShowList] = useState(true);
+    const [refresh, setRefresh] = useState(true);
     const hideList = data => {
         setShowList(false);
     };
@@ -16,6 +17,7 @@ const FormGeneratorComponent = () => {
                 showList ?
                     <List
                         changeFlag={hideList}
+                        refresh={refresh}
                     /> :
                     <FormConfig
                         changeFlag={hideFormConfig}

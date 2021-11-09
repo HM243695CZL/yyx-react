@@ -13,6 +13,7 @@
     "classnames": "^2.3.1",
     "css-animation": "^2.0.4",
     "customize-cra": "^1.0.0",
+    "dayjs": "^1.10.7",
     "font-awesome": "^4.7.0",
     "immutability-helper": "^3.1.1",
     "json-server": "^0.16.3",
