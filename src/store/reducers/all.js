@@ -26,7 +26,10 @@ const global = (state = globalState, action) => {
 
 const userState = {
     token: '',
-    userInfo: {}
+    userInfo: {},
+    formInfo: {
+        UserFormKey: 'UserFormKey'
+    }
 };
 const user = (state = userState, action) => {
     const {type, payload} = action;

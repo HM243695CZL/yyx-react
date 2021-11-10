@@ -1,18 +1,20 @@
-import React, { Component, useEffect, useState } from 'react';
-import { Modal, Form, Input, Button } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Modal, message, Button } from 'antd';
 import { viewUserApi } from '@/api/user';
-import {RES_STATUS} from '../../utils/code';
-const { Item } = Form;
-
+import RenderItem from '@/components/RenderItem';
+import {RES_STATUS} from '@/utils/code';
+import tools from '@/utils/tool';
+import {cloneDeep} from 'lodash';
 const UserModal = ({
     title,
     isVisible,
     cancel,
     confirm,
     id,
+    renderList
 }) => {
-    const [form] = Form.useForm();
-    const [data, setData] = useState(null);
+    const [params, setParams] = useState({});
+    const [valueObj, setValueObj] = useState({});
     useEffect(() => {
         if (isVisible) {
             if (id) {
@@ -21,34 +23,42 @@ const UserModal = ({
                 }).then(res => {
                     if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
                         const { username, password, email, mobile } = res.data;
-                        setData(res.data);
-                        form.setFieldsValue({
+                        let params = {
                             username,
                             password,
                             email,
                             mobile
-                        });
+                        };
+                        setValueObj(params);
+                        setParams(params);
                     }
                 })
             } else {
-                form.setFieldsValue({
-                    username: '',
-                    password: '',
-                    email: '',
-                    mobile: ''
-                });
+                setValueObj({});
             }
         }
     }, [isVisible, id]);
     const submit = () => {
-      form.validateFields().then(val => {
-          val.user_id = id;
-          confirm(val);
-      });
+        const res = tools.requiredFieldValidate(renderList, params);
+       if (res.valid) {
+           let val = cloneDeep(params);
+           val.user_id = id;
+           confirm(val);
+       } else {
+           message.error(res.message);
+       }
+    };
+    const changeFieldValue = (changeFields, allFields) => {
+        let temp = {};
+        allFields.map(item => {
+            temp[item.name[0]] = item.value;
+        });
+        setParams(temp);
     };
     return (
         <div className='user-modal-container'>
             <Modal
+                getContainer={false}
                 title={title}
                 visible={isVisible}
                 maskClosable={false}
@@ -59,56 +69,11 @@ const UserModal = ({
                     <Button key='user-confirm' type='primary' onClick={submit}>确定</Button>
                 ]}
             >
-                <Form
-                    labelCol={{
-                        span: 4
-                    }}
-                    wrapperCol={{
-                        span: 20
-                    }}
-                    form={form}
-                    initialValues={data}
-                    autoComplete='off'
-                >
-                    <Item
-                        label='用户名'
-                        name='username'
-                        rules={[
-                            {
-                                required: true,
-                                message: '用户名不能为空'
-                            }
-                        ]}
-                    >
-                        <Input placeholder={'请输入用户名'}/>
-                    </Item>
-                    <Item
-                        label='密码'
-                        name='password'
-                        rules={[
-                            {
-                                required: true,
-                                message: '密码不能为空'
-                            }
-                        ]}
-                    >
-                        <Input placeholder={'请输入密码'}/>
-                    </Item>
-                    <Item
-                        label='邮箱'
-                        name='email'
-                        rules={[]}
-                    >
-                        <Input placeholder={'请输入邮箱'}/>
-                    </Item>
-                    <Item
-                        label='手机号'
-                        name='mobile'
-                        rules={[]}
-                    >
-                        <Input placeholder={'请输入手机号'} type='number'/>
-                    </Item>
-                </Form>
+                <RenderItem
+                    componentList={renderList}
+                    changeFieldValue={changeFieldValue}
+                    valueObj={valueObj}
+                />
             </Modal>
         </div>
     )

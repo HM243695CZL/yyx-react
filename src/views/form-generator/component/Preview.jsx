@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Modal, message, Button} from 'antd';
-import RenderItem from './RenderItem';
+import RenderItem from '@/components/RenderItem';
 
 const Preview = ({
     renderList,

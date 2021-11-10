@@ -10,7 +10,7 @@ export function saveFormConfigApi(data) {
 
 export function getFormConfigListApi(data) {
     return request({
-        url: '/form-config/list',
+        url: '/form-config/page',
         method: 'post',
         data: request.adornData(data)
     })
@@ -27,6 +27,14 @@ export function deleteFormConfigApi(data) {
 export function updateFormConfigApi(data) {
     return request({
         url: '/form-config/update',
+        method: 'post',
+        data: request.adornData(data)
+    })
+}
+
+export function viewFormConfigApi(data) {
+    return request({
+        url: '/form-config/view',
         method: 'post',
         data: request.adornData(data)
     })

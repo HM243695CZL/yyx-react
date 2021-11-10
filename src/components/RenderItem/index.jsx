@@ -8,17 +8,22 @@ const GlobalComponent = {
 };
 const RenderItem = ({
     componentList,
-    changeFieldValue
+    changeFieldValue,
+    valueObj
 }) => {
-    const [form] = Form.useForm();
+    const [renderForm] = Form.useForm();
     let initVal = {};
     componentList.map(item => {
         initVal[item.__vModel__] = item.config.fieldDefaultValue
     });
     const [init] = useState(initVal);
     useEffect(() => {
-        form.setFieldsValue(initVal);
-    }, [componentList]);
+        if (JSON.stringify(valueObj) !== {}) {
+            renderForm.setFieldsValue(valueObj);
+        } else {
+            renderForm.setFieldsValue(initVal);
+        }
+    }, [componentList, valueObj]);
     const loop = (arr, index) => {
         return arr.map((item, i) => {
             const indexs = index === '' ? String(i) : `${index}-${i}`;
@@ -49,7 +54,8 @@ const RenderItem = ({
         <div className='render-item-container'>
             <Form
                 initialValues={init}
-                form={form}
+                form={renderForm}
+                autoComplete='off'
                 onFieldsChange={(changedFields, allFields) => {
                     changeFieldValue(changedFields, allFields);
                 }}

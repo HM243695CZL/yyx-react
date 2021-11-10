@@ -12,6 +12,26 @@ function getFormKeyValue(configItemList) {
     return 1;
 }
 
+/**
+ * 对渲染的字段进行非空验证
+ */
+function requiredFieldValidate(arr, validObj) {
+    let tipMessage = '';
+    for (let i = 0; i <= arr.length - 1; i++) {
+        let item = arr[i];
+        if (item.config.required) {
+            if (!validObj[item.__vModel__] || validObj[item.__vModel__] === false) {
+                tipMessage = item.config.label + '不能为空';
+                break;
+            }
+        }
+    }
+    return {
+        valid: tipMessage === '',
+        message: tipMessage
+    }
+}
 module.exports = {
-    getFormKeyValue
+    getFormKeyValue,
+    requiredFieldValidate
 };

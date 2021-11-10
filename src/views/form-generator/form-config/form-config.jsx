@@ -55,7 +55,8 @@ const FormConfig = ({
     const [isVisibleForm, setIsVisibleForm] = useState(false);
     const [formCfg, setFormCfg] = useState({
         name: '',
-        remark: ''
+        remark: '',
+        formKey: ''
     });
 
     // 点击添加组件
@@ -232,7 +233,8 @@ const FormConfig = ({
             setDrawingList(JSON.parse(data.configData));
             setFormCfg({
                 name: data.name,
-                remark: data.remark
+                remark: data.remark,
+                formKey: data.formKey
             })
         }
     }, [data]);
@@ -293,7 +295,9 @@ const FormConfig = ({
                         <Button type='default' onClick={e => changeFlag()}>返回</Button>
                     </div>
                 </div>
-                <Form>
+                <Form
+                    autoComplete='off'
+                >
                     <ReactSortable
                         className='form-item'
                         group={{
@@ -360,6 +364,18 @@ const FormConfig = ({
                             {
                                 required: true,
                                 message: '表单名称不能为空'
+                            }
+                        ]}
+                    >
+                        <Input/>
+                    </Item>
+                    <Item
+                        label='表单key'
+                        name='formKey'
+                        rules={[
+                            {
+                                required: true,
+                                message: '表单key不能为空'
                             }
                         ]}
                     >

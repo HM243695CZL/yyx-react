@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import UserModal from './userModal';
+import {connect} from 'react-redux'
 import {Tag, Table, Button, message} from 'antd';
 import {getUserListApi, saveUserApi, updateUserApi, deleteUserApi} from '@/api/user';
+import {viewFormConfigApi} from '@/api/formConfig';
 import {RES_STATUS} from '@/utils/code';
 import Pagination from '@/components/Pagination';
 import './index.less';
@@ -9,6 +11,7 @@ import './index.less';
 class User extends Component {
     state = {
         dataList: [],
+        renderList: [],
         total: 0,
         title: '',
         userId: '',
@@ -17,6 +20,7 @@ class User extends Component {
 
     componentWillMount() {
         this.getDataList();
+        this.getFormConfig();
     }
 
     getDataList() {
@@ -33,8 +37,22 @@ class User extends Component {
         })
     }
 
+    getFormConfig() {
+        viewFormConfigApi({
+            formKey: this.props.formInfo.UserFormKey
+        }).then(res => {
+            if (res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+                this.setState({
+                    renderList: JSON.parse(res.data.configData)
+                })
+            } else {
+                message.error('获取表单配置失败，请重试!');
+            }
+        })
+    }
+
     render() {
-        const { dataList, title, isVisible, userId, total } = this.state;
+        const { dataList, title, isVisible, userId, total, renderList } = this.state;
         const columns = [
             {
                 title: '用户名',
@@ -85,7 +103,8 @@ class User extends Component {
                   this.setState({
                       isVisible: true,
                       title: '新增用户',
-                      userId: null
+                      userId: null,
+                      renderList
                   })
               }
           }
@@ -161,6 +180,7 @@ class User extends Component {
                     title={title}
                     isVisible={isVisible}
                     id={userId}
+                    renderList={renderList}
                     confirm={confirm}
                     cancel={cancel}
                 />
@@ -168,5 +188,7 @@ class User extends Component {
         )
     }
 }
-
-export default User
+const mapStateToProps = state => ({
+    formInfo: state.user.formInfo
+});
+export default connect(mapStateToProps, null)(User)

@@ -24,6 +24,10 @@ const List = ({
             dataIndex: 'name'
         },
         {
+            title: '表单key',
+            dataIndex: 'formKey'
+        },
+        {
             title: '备注',
             dataIndex: 'remark'
         },
@@ -86,6 +90,8 @@ const List = ({
                 if (res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
                     setDataList(res.data);
                     setTotal(res.total);
+                } else {
+                    message.error(res.message);
                 }
             });
         });
@@ -97,6 +103,7 @@ const List = ({
         <div className='list-container'>
             <div className="search-box">
                 <Form
+                    layout='inline'
                     labelCol={{span: 8}}
                     wrapperCol={{span: 16}}
                     form={form}
@@ -105,6 +112,12 @@ const List = ({
                     <Item
                         label='表单名称'
                         name='name'
+                    >
+                        <Input/>
+                    </Item>
+                    <Item
+                        label='表单key'
+                        name='formKey'
                     >
                         <Input/>
                     </Item>
@@ -134,6 +147,7 @@ const List = ({
             <Modal
                 title='预览'
                 visible={isVisiblePreview}
+                onCancel={e => setIsVisiblePreview(false)}
                 maskClosable={false}
                 width='70%'
                 footer={[
