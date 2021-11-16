@@ -3,10 +3,14 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import {Tag, Menu, Dropdown} from 'antd';
 import classNames from 'classnames';
-import {addTagList, cutTagList, emptyTagList, cutOtherTagList} from '@/store/actions';
+import {addTagList, cutTagList, emptyTagList, cutOtherTagList, changeCurrentPath} from '@/store/actions';
 import {getCachingKeys, dropByCacheKey, clearCache} from 'react-router-cache-route';
 const TagList = props => {
-    const {path, title, currentPath, history, tagList, cutTagList, addTagList, emptyTagList, cutOtherTagList} = props;
+    const {
+        path, title, currentPath, history, tagList,
+        cutTagList, addTagList, emptyTagList, cutOtherTagList,
+        changeCurrentPath
+    } = props;
     const closeTag = (path, e) => {
         e.preventDefault();
         turnPath(path);
@@ -24,6 +28,7 @@ const TagList = props => {
         addTagList({
             path: '/dashboard'
         });
+        changeCurrentPath('/dashboard')
     };
 
     const closeOtherTag = path => {
@@ -33,7 +38,8 @@ const TagList = props => {
             // 说明需要选中其他标签，并关闭另外的标签
             history.push(path);
         }
-        cutOtherTagList(path)
+        cutOtherTagList(path);
+        changeCurrentPath(path)
     };
     const turnPath = path => {
         if(getCachingKeys().includes(path)) {
@@ -43,14 +49,17 @@ const TagList = props => {
         // 如果关闭的是当前页，则跳转到最后一个标签
         if(path === currentPath) {
             history.push(tagList[length - 1].path);
+            changeCurrentPath(tagList[length - 1].path);
         }
         // 如果关闭的是最后的标签，并且当前页也是最后一个，则路由跳转
         if(path === tagList[length - 1].path && currentPath === path) {
             // 关闭标签在最后执行，所以跳转到上一个应该是length - 2
             if(length - 2 > 0) {
                 history.push(tagList[length - 2].path);
+                changeCurrentPath(tagList[length - 2].path);
             } else if(length === 2) {
-                history.push(tagList[0].path)
+                history.push(tagList[0].path);
+                changeCurrentPath(tagList[length - 2].path);
             }
         }
         // 关闭最后一个后，跳转到首页
@@ -58,7 +67,8 @@ const TagList = props => {
             history.push('/dashboard');
             addTagList({
                 path: '/dashboard'
-            })
+            });
+            changeCurrentPath('/dashboard');
         }
         // 先跳转路由，再修改state中的数据
         cutTagList(path);
@@ -75,6 +85,7 @@ const TagList = props => {
     const chooseTag = path => {
         if(currentPath === path) return false;
         history.push(path);
+        changeCurrentPath(path);
     };
     return (
         <Dropdown overlay={menu} trigger={['contextMenu']}>
@@ -89,7 +100,8 @@ const TagList = props => {
 };
 
 const mapStateToProps = state => ({
-    tagList: state.UI.tagList
+    tagList: state.UI.tagList,
+    currentPath: state.UI.currentPath
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -104,6 +116,9 @@ const mapDispatchToProps = dispatch => ({
     },
     cutOtherTagList: payload => {
         dispatch(cutOtherTagList(payload));
+    },
+    changeCurrentPath: payload => {
+        dispatch(changeCurrentPath(payload))
     }
 });
 
