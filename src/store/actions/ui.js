@@ -1,6 +1,8 @@
 import * as actionTypes from './actionTypes'
 import {getMenu} from '@/utils';
 import {dynamicRouter} from '@/router/dynamic-router';
+import {cloneDeep} from 'lodash';
+import {CHANGE_CURRENT_PATH} from './actionTypes';
 // 展开或收缩左侧菜单栏
 const changeCollapsed = payload => ({
     type: actionTypes.CHANGE_COLLAPSED,
@@ -16,12 +18,19 @@ const addTagList = ({path, params = {}, type}) => (dispatch, getState) => {
     let data = (JSON.parse(getMenu())|| []);
     data = [...data, ...dynamicRouter];
     data.map(ele => {
-        if(ele.path === path) {
-            handleDispatch(ele);
+        let paths = path.split('?')[0];
+        if(ele.path === paths) {
+            let tempEle = cloneDeep(ele);
+            tempEle.key = path;
+            tempEle.path = path;
+            handleDispatch(tempEle);
         } else if(ele.children) {
             ele.children.map(item => {
-                if(item.path === path) {
-                    handleDispatch(item);
+                if(item.path === paths) {
+                    let tempItem = cloneDeep(item);
+                    tempItem.key = path;
+                    tempItem.path = path;
+                    handleDispatch(tempItem);
                 }
             })
         }
@@ -54,10 +63,16 @@ const cutOtherTagList = payload => ({
     type: actionTypes.CUT_OTHER_TAG_LIST,
     payload
 });
+
+const changeCurrentPath = payload => ({
+    type: CHANGE_CURRENT_PATH,
+    payload
+});
 export {
     changeCollapsed,
     addTagList,
     cutTagList,
     emptyTagList,
-    cutOtherTagList
+    cutOtherTagList,
+    changeCurrentPath
 }

@@ -26,7 +26,12 @@ const global = (state = globalState, action) => {
 
 const userState = {
     token: '',
-    userInfo: {}
+    userInfo: {},
+    formInfo: {
+        UserFormKey: 'UserFormKey',
+        CategoryKey: 'CategoryKey',
+        GoodsKey: 'GoodsKey'
+    }
 };
 const user = (state = userState, action) => {
     const {type, payload} = action;
@@ -50,7 +55,8 @@ const UIState = {
     collapsed: false,
     isMobile: false,
     menuSelected: [],
-    tagList: []
+    tagList: [],
+    currentPath: ''
 };
 
 const UI = (state = UIState, action) => {
@@ -60,6 +66,11 @@ const UI = (state = UIState, action) => {
             return {
                 ...state,
                 collapsed: payload
+            };
+        case actionTypes.CHANGE_CURRENT_PATH:
+            return {
+                ...state,
+                currentPath: payload
             };
         case actionTypes.ADD_TAG_LIST:
             return {

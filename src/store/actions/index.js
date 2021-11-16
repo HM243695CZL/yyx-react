@@ -1,5 +1,8 @@
 import {login} from './login';
-import {changeCollapsed, addTagList, cutTagList, emptyTagList, cutOtherTagList} from './ui'
+import {
+    changeCollapsed, addTagList, cutTagList, emptyTagList, cutOtherTagList,
+    changeCurrentPath
+} from './ui'
 
 export {
     login,
@@ -7,5 +10,6 @@ export {
     addTagList,
     cutTagList,
     emptyTagList,
-    cutOtherTagList
+    cutOtherTagList,
+    changeCurrentPath
 }
