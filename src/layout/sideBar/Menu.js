@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Menu} from 'antd';
 import {Link, withRouter} from 'react-router-dom';
-import {addTagList} from '@/store/actions';
+import {addTagList, changeCurrentPath} from '@/store/actions';
 import {getMenu} from '@/utils';
 
 
@@ -18,10 +18,11 @@ const MenuComponent = props => {
      * tagList最多存在15个，当>= 15时，删除第一个
      */
     const handleMenuSelect = ({key}) => {
-        const {addTagList} = props;
+        const {addTagList, changeCurrentPath} = props;
         addTagList({
             path: key
         });
+        changeCurrentPath(key);
     };
     return (
         <div className='menu-container'>
@@ -88,6 +89,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     addTagList: payload => {
         dispatch(addTagList(payload));
+    },
+    changeCurrentPath: payload => {
+        dispatch(changeCurrentPath(payload))
     }
 });
 

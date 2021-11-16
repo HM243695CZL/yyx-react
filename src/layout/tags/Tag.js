@@ -1,22 +1,22 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
-import {addTagList} from '@/store/actions';
+import {addTagList, changeCurrentPath} from '@/store/actions';
 import TagList from '@/components/TagList'
 import './index.less'
 
 class Tags extends Component{
 
     componentWillMount() {
-        const {addTagList} = this.props;
-        const currentPath = this.props.history.location.pathname;
+        const {addTagList, changeCurrentPath} = this.props;
+        const locationCurrentPath = this.props.history.location.pathname;
         addTagList({
-            path: currentPath
+            path: locationCurrentPath
         });
+        changeCurrentPath(locationCurrentPath)
     }
     render() {
         const {tagList} = this.props;
-        const currentPath = this.props.history.location.pathname;
         return (
             <div className='tags-box'>
                 {
@@ -25,7 +25,6 @@ class Tags extends Component{
                             <TagList
                                 path={ele.path}
                                 title={ele.title}
-                                currentPath={currentPath}
                             />
                         </div>
                     ))
@@ -36,12 +35,16 @@ class Tags extends Component{
 }
 
 const mapStateToProps = state => ({
-    tagList: state.UI.tagList
+    tagList: state.UI.tagList,
+    currentPath: state.UI.currentPath
 });
 
 const mapDispatchToProps = dispatch => ({
     addTagList: payload => {
         dispatch(addTagList(payload))
+    },
+    changeCurrentPath: payload => {
+        dispatch(changeCurrentPath(payload))
     }
 });
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Tags))

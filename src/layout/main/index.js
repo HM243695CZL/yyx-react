@@ -42,7 +42,7 @@ const AppMain = props =>{
             <CacheSwitch>
                 {
                     routes.map(ele => {
-                        if(ele.keepAlive) {
+                        if(ele.keepAlive || ele.isDynamic) {
                             return <CacheRoute
                                 when='always'
                                 exact={true}
@@ -50,6 +50,7 @@ const AppMain = props =>{
                                 key={ele.path}
                                 cacheKey={ele.path}
                                 path={ele.path}
+                                multiple={true}
                             />
                         }
                         return <Route
