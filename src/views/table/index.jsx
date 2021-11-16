@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Table, Button, Input, message} from 'antd';
-import {addTagList} from '@/store/actions';
+import {addTagList, changeCurrentPath} from '@/store/actions';
 
 
 class TableComponent extends Component{
@@ -18,17 +18,24 @@ class TableComponent extends Component{
         console.log('table recovered')
     };
     render() {
-        const {history, addTagList} = this.props;
+        const {history, addTagList, changeCurrentPath} = this.props;
         const add = data => {
-            history.push({
-                pathname: '/table/info',
-                params: data
-            });
+            history.push('/table/info?' + data.age);
             addTagList({
-                path: '/table/info',
+                path: '/table/info?' + data.age,
                 params: data,
                 type: 'dynamic'
             });
+            changeCurrentPath('/table/info?' + data.age);
+        };
+        const addOther = data => {
+            history.push('/table/dynamic?' + data.age);
+            addTagList({
+                path: '/table/dynamic?' + data.age,
+                params: data,
+                type: 'dynamic'
+            });
+            changeCurrentPath('/table/dynamic?' + data.age)
         };
         const showMessage = () => {
             message.success(12);
@@ -55,7 +62,7 @@ class TableComponent extends Component{
                     return (
                         <div className='operate-column'>
                             <span className='operate-edit' onClick={e => add(data)}>修改</span>
-                            <span className="operate-del">删除</span>
+                            <span className="operate-del" onClick={e => addOther(data)}>删除</span>
                         </div>
                     )
                 }
@@ -77,6 +84,9 @@ class TableComponent extends Component{
 const mapDispatchToProps = dispatch => ({
     addTagList: payload => {
         dispatch(addTagList(payload));
+    },
+    changeCurrentPath: payload => {
+        dispatch(changeCurrentPath(payload));
     }
 });
 

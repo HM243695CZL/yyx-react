@@ -6,6 +6,7 @@ function TableInfoComponent(props) {
     return(
         <div className='table-info-container'>
             table-info-container 【params】-{JSON.stringify(props.location.params)}
+            <input type="text"/>
         </div>
     )
 }
