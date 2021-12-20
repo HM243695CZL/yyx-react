@@ -75,16 +75,13 @@ const UI = (state = UIState, action) => {
         case actionTypes.ADD_TAG_LIST:
             return {
                 ...state,
-                tagList: [
-                    ...state.tagList,
-                    payload
-                ]
+                tagList: payload
             };
         case actionTypes.CUT_TAG_LIST:
             return {
                 ...state,
                 tagList: [
-                    ...state.tagList.filter(ele => ele.path !== payload)
+                    ...state.tagList.filter(ele => ele.tabKey !== payload)
                 ]
             };
         case actionTypes.EMPTY_TAG_LIST:
@@ -96,7 +93,7 @@ const UI = (state = UIState, action) => {
             return {
                 ...state,
                 tagList: [
-                    ...state.tagList.filter(ele => ele.path === payload)
+                    ...state.tagList.filter(ele => ele.tabKey === payload)
                 ]
             }
     }

@@ -3,10 +3,11 @@ import {connect} from 'react-redux';
 import {Layout} from 'antd';
 import SideBar from './sideBar'
 import Header from './header'
-import Tags from './tags'
-import AppMain from './main'
+import AppMain from './appMain'
+import {getMenu} from '@/utils';
 import SkinTool from '@/components/SkinTool'
 import './index.less'
+const { Content } = Layout;
 
 class LayoutComponent extends Component {
     state = {
@@ -16,22 +17,24 @@ class LayoutComponent extends Component {
             layout: ['fixedHeader'],
         }
     };
+
     onChangeTheme = theme => {
         this.setState({
             theme
         })
     };
     render() {
-        const {collapsed} = this.props;
+        const { collapsed } = this.props;
         const {theme} = this.state;
         const marginLeft = collapsed ? 80 : 250;
         return (
-            <Layout>
+            <Layout className='layout-container'>
                 <SideBar theme={theme} />
                 <Layout style={{marginLeft, transition: 'margin .2s'}}>
                     <Header theme={theme} />
-                    <Tags theme={theme} />
-                    <AppMain theme={theme} />
+                    <Content className='main-content'>
+                        <AppMain />
+                    </Content>
                 </Layout>
                 <SkinTool theme={theme} onChangeTheme={this.onChangeTheme} />
             </Layout>
@@ -41,7 +44,8 @@ class LayoutComponent extends Component {
 
 const mapStateToProps = state => ({
     collapsed: state.UI.collapsed,
-    isMobile: state.UI.isMobile
+    isMobile: state.UI.isMobile,
+    tagList: state.UI.tagList,
+    currentPath: state.UI.currentPath
 });
-
-export default connect(mapStateToProps)(LayoutComponent)
+export default connect(mapStateToProps, null)(LayoutComponent)

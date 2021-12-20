@@ -1,41 +1,23 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Table, Button, Input, message} from 'antd';
-import {addTagList, changeCurrentPath} from '@/store/actions';
-
+import {addTagList} from '@/store/actions';
+import {withRouter} from 'react-router-dom';
 
 class TableComponent extends Component{
-    constructor(props, ...args) {
-        super(props, ...args);
-        props.cacheLifecycles.didCache(this.componentDidCache);
-        props.cacheLifecycles.didRecover(this.componentDidRecover);
-    }
-    componentDidCache = () => {
-        console.log('table cached')
-    };
-
-    componentDidRecover = () => {
-        console.log('table recovered')
-    };
     render() {
         const {history, addTagList, changeCurrentPath} = this.props;
         const add = data => {
-            history.push('/table/info?' + data.age);
-            addTagList({
-                path: '/table/info?' + data.age,
-                params: data,
-                type: 'dynamic'
+            history.push({
+                pathname: `/table-info?key=${data.key}`,
+                query: {
+                    id: data.key
+                }
             });
-            changeCurrentPath('/table/info?' + data.age);
-        };
-        const addOther = data => {
-            history.push('/table/dynamic?' + data.age);
             addTagList({
-                path: '/table/dynamic?' + data.age,
-                params: data,
-                type: 'dynamic'
-            });
-            changeCurrentPath('/table/dynamic?' + data.age)
+                tabKey: `/table-info?key=${data.key}`,
+                title: '表格详情' + data.key
+            })
         };
         const showMessage = () => {
             message.success(12);
@@ -62,7 +44,6 @@ class TableComponent extends Component{
                     return (
                         <div className='operate-column'>
                             <span className='operate-edit' onClick={e => add(data)}>修改</span>
-                            <span className="operate-del" onClick={e => addOther(data)}>删除</span>
                         </div>
                     )
                 }
@@ -84,10 +65,7 @@ class TableComponent extends Component{
 const mapDispatchToProps = dispatch => ({
     addTagList: payload => {
         dispatch(addTagList(payload));
-    },
-    changeCurrentPath: payload => {
-        dispatch(changeCurrentPath(payload));
     }
 });
 
-export default connect(null, mapDispatchToProps)(TableComponent)
+export default withRouter(connect(null, mapDispatchToProps)(TableComponent))

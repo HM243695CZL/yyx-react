@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 function TableDynamicComponent(props) {
     return(
         <div className='table-dynamic-container'>
-            table-dynamic-container 【params】-{JSON.stringify(props.location.params)}
+            table-dynamic-container
             <br/>
             <input type="text"/>
         </div>

@@ -1,0 +1,37 @@
+import React from 'react';
+import { Dashboard, Menu, Table, TableInfo } from './importComp'
+
+export const getTabsComponent = key => {
+    let newKey = key;
+    if (key.includes('?')) {
+        newKey = key.split('?')[0]
+    }
+    const tab = {
+        title: 'not found',
+        component: 'not found'
+    };
+    /**
+     * 注：这里只能通过switch的方式切换组件，才能缓存输入的数据
+     *  不能通过obj[key] = <Component/> 的方式
+     */
+    switch (newKey) {
+        case '/':
+            tab.component = <Dashboard />;
+            break;
+        case '/dashboard':
+            tab.component = <Dashboard />;
+            break;
+        case '/menu':
+            tab.component = <Menu />;
+            break;
+        case '/table':
+            tab.component = <Table />;
+            break;
+        case '/table-info':
+            tab.component = <TableInfo />;
+            break;
+        default:
+            break;
+    }
+    return tab;
+};

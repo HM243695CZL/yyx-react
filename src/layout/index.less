@@ -1,9 +1,49 @@
+.layout-container{
+  height: 100%;
+}
 .tags-container{
   height: 36px;
   width: 100%;
   background: #fff;
   border-bottom: 1px solid #d8dce5;
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 12%), 0 0 3px 0 rgb(0 0 0 / 4%);
+}
+.main-content{
+  padding: 15px;
+  flex: 1;
+  .ant-tabs{
+    padding: 15px;
+    background: #fff;
+    height: 100%;
+    .ant-tabs-content-holder{
+      height: calc(100% - 54px - 30px);
+      overflow: hidden scroll;
+    }
+  }
+  .context-menu{
+    display: none; margin: 0;
+    background: #fff;
+    z-index: 3000;
+    position: absolute;
+    list-style-type: none;
+    padding: 5px 0;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #333;
+    li{
+      margin: 0;
+      padding: 7px 16px;
+      cursor: pointer;
+      &:hover{
+        background: #eee;
+      }
+    }
+
+  }
+  .show{
+    display: block;
+  }
 }
 .app-main-container{
   min-height: calc(100vh - 100px);

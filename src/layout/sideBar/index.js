@@ -12,7 +12,7 @@ const {Sider} = Layout;
 
 class SideBarComponent extends Component{
     render() {
-        const {collapsed, isMobile, theme} = this.props;
+        const {collapsed, theme} = this.props;
         const classnames = cx('logo', 'bg-' + theme.navbar);
         const sideBarClass = cx('sidebar-left', 'side-' + theme.leftSide);
         return (

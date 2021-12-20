@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import Panel from '@/components/Panel'
-import {Row, Col, Tabs} from 'antd';
+import {Row, Col, Tabs, Input } from 'antd';
 import cx from 'classnames';
 import './index.less';
-const { TabPane } = Tabs;
 
 class Dashboard extends Component{
 
@@ -50,6 +49,7 @@ class Dashboard extends Component{
         );
         return (
             <div className='dashboard-container'>
+                <Input/>
                 <Row gutter={10}>
                     <Col md={8}>
                         <Panel title='快捷通道' height={quickCardHeight} showControl>

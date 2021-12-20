@@ -37,18 +37,18 @@ service.interceptors.request.use(
         if(getToken()) {
             config.headers['authorization'] = 'Bearer ' + getToken();
         }
-        openLoading();
+        // openLoading();
         return config;
     },
     error => {
-        closeLoading();
+        // closeLoading();
         return Promise.reject(error);
     }
 );
 
 service.interceptors.response.use(
     response => {
-        closeLoading();
+        // closeLoading();
         if(response.data.status === 401) {
             // token超时，跳转到登录
             sessionStorage.clear();
@@ -60,7 +60,7 @@ service.interceptors.response.use(
         return response.data;
     },
     error => {
-        closeLoading();
+        // closeLoading();
         return Promise.reject(error);
     }
 );

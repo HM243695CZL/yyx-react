@@ -2,58 +2,55 @@ import * as actionTypes from './actionTypes'
 import {getMenu} from '@/utils';
 import {dynamicRouter} from '@/router/dynamic-router';
 import {cloneDeep} from 'lodash';
-import {CHANGE_CURRENT_PATH} from './actionTypes';
 // 展开或收缩左侧菜单栏
 const changeCollapsed = payload => ({
     type: actionTypes.CHANGE_COLLAPSED,
     payload
 });
-
-const addTagList = ({path, params = {}, type}) => (dispatch, getState) => {
+const addTagList = payload => (dispatch, getState) => {
     const curTagList = getState().UI.tagList;
-    if(curTagList.filter(ele => ele.path === path).length) return;
-    if(curTagList.length >= 15) {
-        console.log('超过15个了，要删除了');
-    }
-    let data = (JSON.parse(getMenu())|| []);
-    data = [...data, ...dynamicRouter];
-    data.map(ele => {
-        let paths = path.split('?')[0];
-        if(ele.path === paths) {
-            let tempEle = cloneDeep(ele);
-            tempEle.key = path;
-            tempEle.path = path;
-            handleDispatch(tempEle);
-        } else if(ele.children) {
-            ele.children.map(item => {
-                if(item.path === paths) {
-                    let tempItem = cloneDeep(item);
-                    tempItem.key = path;
-                    tempItem.path = path;
-                    handleDispatch(tempItem);
-                }
-            })
+    let findKey = false;
+    curTagList.map(item => {
+        if (payload.tabKey === item.tabKey) {
+            findKey = true
         }
     });
-    function handleDispatch(obj) {
-        if(type === 'dynamic') {
-            data.map(item => {
-                if(item.path === path) {
-                    item.params = params;
+    if (!findKey) {
+        if (!payload.title) {
+            (JSON.parse(getMenu())|| []).map(item => {
+                if (item.path === payload.tabKey) {
+                    payload.title = item.title
                 }
-            })
+                if (payload.tabKey === '/') {
+                    payload.title = '首页'
+                }
+            });
         }
         dispatch({
             type: actionTypes.ADD_TAG_LIST,
-            payload: {...obj, params}
+            payload: [
+                ...curTagList,
+                { ...payload }
+            ]
+        });
+        dispatch({
+            type: actionTypes.CHANGE_CURRENT_PATH,
+            payload: payload.tabKey
+        });
+    } else {
+        dispatch({
+            type: actionTypes.CHANGE_CURRENT_PATH,
+            payload: payload.tabKey
         })
     }
 };
 
-const cutTagList = payload => ({
-    type: actionTypes.CUT_TAG_LIST,
-    payload
-});
+const cutTagList = payload => (dispatch, getState) => {
+    dispatch({
+        type: actionTypes.CUT_TAG_LIST,
+        payload: payload.tabKey
+    })
+};
 
 const emptyTagList = () => ({
     type: actionTypes.EMPTY_TAG_LIST
@@ -61,12 +58,12 @@ const emptyTagList = () => ({
 
 const cutOtherTagList = payload => ({
     type: actionTypes.CUT_OTHER_TAG_LIST,
-    payload
+    payload: payload.tabKey
 });
 
 const changeCurrentPath = payload => ({
-    type: CHANGE_CURRENT_PATH,
-    payload
+    type: actionTypes.CHANGE_CURRENT_PATH,
+    payload: payload.tabKey
 });
 export {
     changeCollapsed,

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, message, Table, Tag} from 'antd';
+import {Button, message, Table, Tag, Input } from 'antd';
 import {getMenuListApi, saveMenuApi, delMenuApi, editMenuApi} from '@/api/menu';
 import './index.less'
 import OperateMenu from './operateMenu'
@@ -157,6 +157,7 @@ class Menu extends Component {
         };
         return (
             <div className='menu-container'>
+                <Input/>
                 <div className="btn-box">
                     <Button type='primary' onClick={showModal()}>新增</Button>
                     <Button type='default' onClick={e => this.getDataList()}>查询</Button>

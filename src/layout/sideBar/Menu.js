@@ -17,12 +17,14 @@ const MenuComponent = props => {
      * 每次点击菜单栏时，判断tagList数组中是否存在当前path，若没有，则push
      * tagList最多存在15个，当>= 15时，删除第一个
      */
-    const handleMenuSelect = ({key}) => {
-        const {addTagList, changeCurrentPath} = props;
+    const handleMenuSelect = ({ key }) => {
+        const {addTagList, changeCurrentPath, location, match} = props;
+        const tabKey = key + location.search;
         addTagList({
-            path: key
+            tabKey,
+            params: match.params
         });
-        changeCurrentPath(key);
+        // changeCurrentPath(key);
     };
     return (
         <div className='menu-container'>
