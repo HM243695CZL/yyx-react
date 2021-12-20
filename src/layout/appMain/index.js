@@ -133,7 +133,9 @@ const AppMain = props => {
                     top: top + 'px'
                 }}
             >
-                <li onClick={closeThisTab}>关闭</li>
+                {
+                    currentPath !== '/' && <li onClick={closeThisTab}>关闭</li>
+                }
                 <li onClick={closeOtherTab}>关闭其他</li>
                 <li onClick={closeAllTab}>关闭全部</li>
             </ul>
