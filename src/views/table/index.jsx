@@ -6,7 +6,7 @@ import {withRouter} from 'react-router-dom';
 
 class TableComponent extends Component{
     render() {
-        const {history, addTagList, changeCurrentPath} = this.props;
+        const {history, addTagList} = this.props;
         const add = data => {
             history.push({
                 pathname: `/table-info?key=${data.key}`,
