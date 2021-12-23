@@ -22,3 +22,13 @@ export const TableInfo = Loadable({
     loading: Loading,
     delay: 150
 });
+export const FormGenerator = Loadable({
+    loader: () => import('@/views/form-generator/index.jsx'),
+    loading: Loading,
+    delay: 150
+});
+export const User = Loadable({
+    loader: () => import('@/views/user/index.jsx'),
+    loading: Loading,
+    delay: 150
+});

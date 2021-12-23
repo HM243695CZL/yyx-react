@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import 'normalize.css/normalize.css';
 import 'antd/dist/antd.css';
 import 'font-awesome/css/font-awesome.css';
-import './App.css'
+import './App.css';
+import './assets/fonts/iconfont.css';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';

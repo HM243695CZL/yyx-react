@@ -1,38 +1,40 @@
 import request from '@/utils/request';
 
-export function getMenuListApi(data) {
+export function saveFormConfigApi(data) {
     return request({
-        url: '/menu/list',
-        method: 'get',
-        data: request.adornData(data)
-    })
-}
-export function getMenuPageApi(data) {
-    return request({
-        url: '/menu/page',
+        url: '/form-config/create',
         method: 'post',
         data: request.adornData(data)
-    })
+    });
 }
-export function saveMenuApi(data) {
+
+export function getFormConfigListApi(data) {
     return request({
-        url: '/menu/create',
+        url: '/form-config/page',
         method: 'post',
         data: request.adornData(data)
     })
 }
 
-export function editMenuApi(data) {
+export function deleteFormConfigApi(data) {
     return request({
-        url: '/menu/update',
+        url: '/form-config/delete',
         method: 'post',
         data: request.adornData(data)
     })
 }
 
-export function delMenuApi(data) {
+export function updateFormConfigApi(data) {
     return request({
-        url: '/menu/delete',
+        url: '/form-config/update',
+        method: 'post',
+        data: request.adornData(data)
+    })
+}
+
+export function viewFormConfigApi(data) {
+    return request({
+        url: '/form-config/view',
         method: 'post',
         data: request.adornData(data)
     })

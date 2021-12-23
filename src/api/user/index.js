@@ -8,9 +8,37 @@ export function loginApi(data) {
     });
 }
 
-export function getUserListApi(data) {
+export function getUserListPageApi(data) {
     return request({
-        url: '/user/list',
+        url: '/user/page',
+        method: 'post',
+        data: request.adornData(data)
+    })
+}
+export function saveUserApi(data) {
+    return request({
+        url: '/user/create',
+        method: 'post',
+        data: request.adornData(data)
+    })
+}
+export function updateUserApi(data) {
+    return request({
+        url: '/user/update',
+        method: 'post',
+        data: request.adornData(data)
+    })
+}
+export function deleteUserApi(data) {
+    return request({
+        url: '/user/delete',
+        method: 'post',
+        data: request.adornData(data)
+    })
+}
+export function viewUserApi(data) {
+    return request({
+        url: '/user/view',
         method: 'post',
         data: request.adornData(data)
     })

@@ -17,13 +17,13 @@ const OperateMenu = ({
     const [form] = Form.useForm();
     useEffect(() => {
         if(isShow) {
-            // getMenuListApi({
-            //     page: 0,
-            //     size: 10
-            // }).then(res => {
-            //     const data = res.data.filter(ele => ele.id !== rowData.id);
-            //     setParentMenu(arrayToTree(data, 'id', 'parentId'));
-            // });
+            getMenuListApi({
+                page: 0,
+                size: 10
+            }).then(res => {
+                const data = res.data.filter(ele => ele.id !== rowData.id);
+                setParentMenu(arrayToTree(data, 'id', 'parentId'));
+            });
             form.resetFields();
             form.setFieldsValue(rowData);
         }

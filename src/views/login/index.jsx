@@ -39,11 +39,8 @@ class Login extends Component {
     };
 
     getMenuList = () => {
-        getMenuListApi({
-            page: 0,
-            size: 20
-        }).then(res => {
-            if (res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+        getMenuListApi().then(res => {
+            if (res.code === RES_STATUS.SUCCESS_CODE) {
                 let data = arrayToTree(res.data, 'id', 'parentId')
                 data.map(item => {
                     if(item.children && item.children.length) {
