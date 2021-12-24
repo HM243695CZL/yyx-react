@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {Button, message, Table, Tag, Input, Form } from 'antd';
+import {Button, message, Table, Tag, Input, Form, Upload } from 'antd';
 import {getMenuListApi, getMenuPageApi, saveMenuApi, delMenuApi, editMenuApi} from '@/api/menu';
+import { uploadFileApi } from '@/api/common';
 import Pagination from '@/components/Pagination';
 import OperateMenu from './operateMenu'
 import {RES_STATUS,  PageEntity, FilterEnum} from '@/utils/code';
@@ -20,6 +21,7 @@ const Menu = props => {
         rowData: {}
     });
     const [isVisible, setIsVisible] = useState(false);
+    const [fileList, setFileList] = useState([]);
     const columns = [
         {
             title: '菜单名称',
@@ -162,6 +164,18 @@ const Menu = props => {
             rowData: {}
         })
     };
+    const customUploadFile = files => {
+        const { file } = files;
+        let formData = new FormData();
+        formData.append('file', file);
+        uploadFileApi(formData).then(res => {
+            setFileList([...fileList, {
+                uid: res.data.id,
+                name: file.name,
+                status: 'done'
+            }])
+        })
+    };
     useEffect(() => {
         getDataList();
     }, []);
@@ -190,6 +204,13 @@ const Menu = props => {
                     </Item>
                 </Form>
                 <div className="btn-box">
+                    <Upload
+                        fileList={fileList}
+                        multiple
+                        customRequest={e => customUploadFile(e)}
+                    >
+                        <Button>上传</Button>
+                    </Upload>
                     <Button type='primary' onClick={showModal()}>新增</Button>
                     <Button type='default' onClick={e => getDataList()}>查询</Button>
                 </div>
