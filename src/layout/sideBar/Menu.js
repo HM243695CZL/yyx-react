@@ -43,7 +43,7 @@ const MenuComponent = props => {
                                     key={ele.path}
                                     title={
                                         <span>
-                                            <i className={ele.icon} />
+                                            <i className={'fa fa-' + ele.icon} />
                                             {
                                                 !collapsed && ele.title
                                             }
@@ -56,7 +56,7 @@ const MenuComponent = props => {
                                                 key={subItem.path}
                                             >
                                                 <Link to={subItem.path}>
-                                                    <i className={subItem.icon} />{subItem.title}
+                                                    <i className={'fa fa-' + subItem.icon} />{subItem.title}
                                                 </Link>
                                             </Menu.Item>
                                         )
@@ -67,7 +67,7 @@ const MenuComponent = props => {
                             return (
                                 <Menu.Item key={ele.path}>
                                     <Link to={ele.path} title={ele.title}>
-                                        <i className={ele.icon} />
+                                        <i className={'fa fa-' + ele.icon} />
                                         {
                                             !collapsed && ele.title
                                         }

@@ -89,7 +89,7 @@ const List = ({
             getFormConfigListApi(pageInfo).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     setDataList(res.data.dataList);
-                    setTotal(res.total);
+                    setTotal(res.data.total);
                 } else {
                     message.error(res.data.message);
                 }

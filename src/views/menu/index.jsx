@@ -18,7 +18,6 @@ const Menu = props => {
         title: '',
         menuId: '',
         total: 0,
-        rowData: {}
     });
     const [isVisible, setIsVisible] = useState(false);
     const [fileList, setFileList] = useState([]);
@@ -108,7 +107,7 @@ const Menu = props => {
                 setStateData({
                     ...stateData,
                     title: '编辑菜单',
-                    rowData: data
+                    menuId: data.id
                 });
             } else {
                 // 新增
@@ -116,7 +115,7 @@ const Menu = props => {
                 setStateData({
                     ...stateData,
                     title: '新增菜单',
-                    rowData: {}
+                    menuId: null
                 });
             }
 
@@ -179,7 +178,7 @@ const Menu = props => {
     useEffect(() => {
         getDataList();
     }, []);
-    const {dataList, title, total, rowData} = stateData;
+    const {dataList, title, total, menuId} = stateData;
     return (
         <div className='menu-container'>
             <div className='search-box'>
@@ -235,7 +234,7 @@ const Menu = props => {
             <OperateMenu
                 title={title}
                 isShow={isVisible}
-                rowData={rowData}
+                menuId={menuId}
                 confirm={confirm}
                 cancel={cancel}
             />

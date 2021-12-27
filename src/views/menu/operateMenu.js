@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Modal, Form, Input, Switch, TreeSelect, Radio, InputNumber, Button} from 'antd';
 import cx from 'classnames'
-import {getMenuListApi} from '@/api/menu';
+import {getMenuListApi, viewMenuApi} from '@/api/menu';
+import {getIconListApi} from '@/api/icon';
 import {arrayToTree} from '@/utils';
+import {RES_STATUS} from '@/utils/code';
 import  './index.less'
-import {iconList} from './iconList';
 const {Item} = Form;
 
 const OperateMenu = ({
@@ -12,11 +13,13 @@ const OperateMenu = ({
     title,
     confirm,
     cancel,
-    rowData
+    menuId
 }) => {
     const [parentMenu, setParentMenu] = useState([]);
     const [showIcon, setShowIcon] = useState(false);
+    const [iconList, setIconList] = useState([]);
     const [tipTxt, setTipTxt] = useState('菜单');
+    const [init, setInit] = useState({});
     const [form] = Form.useForm();
     useEffect(() => {
         if(isShow) {
@@ -24,19 +27,38 @@ const OperateMenu = ({
                 page: 0,
                 size: 10
             }).then(res => {
-                const data = res.data.filter(ele => ele.id !== rowData.id);
+                const data = res.data.filter(ele => ele.id !== menuId);
                 setParentMenu(arrayToTree(data, 'id', 'parentId'));
             });
-            form.resetFields();
-            form.setFieldsValue(rowData);
+            getIconListApi().then(res => {
+                if (res.code === RES_STATUS.SUCCESS_CODE) {
+                    setIconList(res.data);
+                }
+            });
+            if (menuId) {
+                viewMenuApi({
+                    id: menuId
+                }).then(res => {
+                    if (res.code === RES_STATUS.SUCCESS_CODE) {
+                        setInit(res.data);
+                        form.resetFields();
+                        form.setFieldsValue(init);
+                    }
+                });
+            } else {
+                form.resetFields();
+                form.setFieldsValue(init);
+            }
+        } else {
+            setInit({});
         }
-    }, [isShow, rowData]);
+    }, [isShow, menuId]);
     const changeRadio = e => {
         e.target.value === 1 ? setTipTxt('菜单') : setTipTxt('目录')
     };
     const submit = () => {
         form.validateFields().then(val => {
-            val.id = rowData.id;
+            val.id = menuId;
             confirm(val);
         })
     };
@@ -46,8 +68,16 @@ const OperateMenu = ({
     const closeIcon = () => {
         setShowIcon(false);
     };
-    const confirmIcon = () => {
-        console.log(111);
+    const confirmIcon = icon => {
+        setInit({
+            ...init,
+            icon
+        });
+        form.setFieldsValue({
+            ...init,
+            icon
+        });
+        closeIcon();
     };
     return (
         <div className='operate-menu-container'>
@@ -64,7 +94,7 @@ const OperateMenu = ({
                     labelCol={{span: 8}}
                     wrapperCol={{span: 16}}
                     form={form}
-                    initialValues={rowData}
+                    initialValues={init}
                 >
                     <Item
                         label='类型'
@@ -103,7 +133,7 @@ const OperateMenu = ({
                             allowClear
                             treeDefaultExpandAll
                             style={{width: '100%'}}
-                            value={rowData.parentId}
+                            value={init.parentId}
                             dropdownStyle={{
                                 maxHeight: 400,
                                 overflow: 'auto'
@@ -118,7 +148,7 @@ const OperateMenu = ({
                     >
                         <div className='icon-box'>
                             {
-                                rowData.icon && <i className={'fa fa-' + rowData.icon} />
+                                init.icon && <i className={'fa fa-' + init.icon} />
                             }
                             <Button onClick={e => showIconList()}>选择图标</Button>
                         </div>
@@ -136,22 +166,22 @@ const OperateMenu = ({
                         name='keepAlive'
                         valuePropName='checked'
                     >
-                        <Switch defaultChecked={rowData.keepAlive}/>
+                        <Switch defaultChecked={init.keepAlive}/>
                     </Item>
                     <Item
                         label='是否隐藏'
                         name='hidden'
                         valuePropName='checked'
                     >
-                        <Switch defaultChecked={rowData.hidden}/>
+                        <Switch defaultChecked={init.hidden}/>
                     </Item>
                 </Form>
             </Modal>
             <Modal
-                title='图标列表'
+                title={'图标列表(' + iconList.length + ')'}
                 visible={showIcon}
                 onCancel={closeIcon}
-                onOk={confirmIcon}
+                onOk={closeIcon}
                 okText='确定'
                 cancelText='取消'
                 width='60%'
@@ -161,8 +191,12 @@ const OperateMenu = ({
                     {
                         iconList.map(item => {
                             return (
-                                <li key={item} className={cx({
-                                    'active': rowData.icon === item
+                                <li
+                                    key={item}
+                                    title={item}
+                                    onClick={e => confirmIcon(item)}
+                                    className={cx({
+                                    'active': init.icon === item
                                 })}>
                                     <i className={
                                         cx('fa fa-' + item)

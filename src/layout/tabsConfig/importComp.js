@@ -32,3 +32,8 @@ export const User = Loadable({
     loading: Loading,
     delay: 150
 });
+export const Icon = Loadable({
+    loader: () => import('@/views/icon/index.jsx'),
+    loading: Loading,
+    delay: 150
+});

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Tag, Table, Button, message, Input, Form } from 'antd';
+import React, {useState, useEffect} from 'react';
+import { Table, Button, message, Input, Form } from 'antd';
 import { cloneDeep } from 'loadsh';
-import { getUserListPageApi, saveUserApi, updateUserApi, deleteUserApi, viewUserApi } from '@/api/user';
+import dayjs from 'dayjs';
+import {getIconListPageApi, saveIconApi, delIconApi} from '@/api/icon';
 import { viewFormConfigApi } from '@/api/formConfig';
 import { RES_STATUS, PageEntity, FilterEnum } from '@/utils/code';
 import { PaginationUtils } from '@/utils/PaginationUtils';
@@ -11,38 +12,41 @@ import store from '@/store';
 import './index.less';
 const { Item } = Form;
 
-const User = props => {
+const Icon = props => {
     const [form] = Form.useForm();
     const [stateData, setStateData] = useState({
-       dataList: [],
-       total: 0,
-       title: '',
-       id: null,
-       fieldArr: ['username', 'password', 'email', 'mobile']
+        dataList: [],
+        total: 0,
+        title: '',
+        id: null,
+        fieldArr: ['iconName']
     });
     const [renderList, setRenderList] = useState([]);
     const [isVisible, setIsVisible] = useState(false);
+    const [pageInfo, setPageInfo] = useState(cloneDeep(PageEntity));
     const columns = [
         {
-            title: '用户名',
-            dataIndex: 'username'
+            title: '序号',
+            dataIndex: 'index',
+            render: (text, record, index) => <span>{index + 1}</span>
         },
         {
-            title: '邮箱',
-            dataIndex: 'email'
+            title: '图标名称',
+            dataIndex: 'iconName'
         },
         {
-            title: '手机号',
-            dataIndex: 'mobile'
+            title: '图标',
+            dataIndex: 'iconName',
+            render: data => <i className={'fa fa-' + data} />
         },
         {
-            title: '状态',
-            dataIndex: 'status',
-            render: data => {
-                return (
-                    <span>{data ? <Tag color='#87d068'>启用</Tag> : <Tag color='#f50'>禁用</Tag>}</span>
-                )
-            }
+            title: '创建人',
+            dataIndex: 'createUser'
+        },
+        {
+            title: '创建时间',
+            dataIndex: 'createdTime',
+            render: data => <span>{ dayjs(data).format('YYYY-MM-DD HH:mm:ss')}</span>
         },
         {
             title: '操作',
@@ -51,8 +55,7 @@ const User = props => {
             render(data) {
                 return (
                     <div className='operate-column'>
-                        <span className='operate-edit' onClick={showModal(data)}>修改</span>
-                        <span className="operate-del" onClick={delUser(data)}>删除</span>
+                        <span className="operate-del" onClick={delIcon(data)}>删除</span>
                     </div>
                 )
             }
@@ -60,26 +63,27 @@ const User = props => {
     ];
     const getFormConfig = () => {
         viewFormConfigApi({
-            formKey: store.getState().user.formInfo.UserFormKey
+            formKey: store.getState().user.formInfo.IconFormKey
         }).then(res => {
-            if (res.code === RES_STATUS.SUCCESS_CODE) {
+            if (res.code === RES_STATUS.SUCCESS_CODE && res.data) {
                 setRenderList(JSON.parse(res.data.configData));
             } else {
                 message.error(`获取表单配置失败，
-                请检查"表单生成器"中的数据! 当前接口的formKey为：
-                "${ store.getState().user.formInfo.UserFormKey}"`);
+                请检查"表单生成器"中的数据，当前接口的formKey为：
+                "${ store.getState().user.formInfo.IconFormKey}"`);
             }
         })
     };
     const getDataList = () => {
         form.validateFields().then(val => {
-            let pageInfo = cloneDeep(PageEntity);
             for (const o in val) {
                 if (val[o]) {
                     pageInfo.filters[o] = PaginationUtils.filters(val[o], FilterEnum.CONTAINS);
+                } else {
+                    delete pageInfo.filters[o];
                 }
             }
-            getUserListPageApi(pageInfo).then(res => {
+            getIconListPageApi(pageInfo).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     setStateData({
                         ...stateData,
@@ -88,32 +92,22 @@ const User = props => {
                     })
                 }
             })
-        });
+        })
     };
     const showModal = data => {
         return e => {
-            if (data) {
-                // 修改
-                setStateData({
-                    ...stateData,
-                    title: '修改用户',
-                    id: data.id
-                });
-                setIsVisible(true);
-            } else {
-                // 新增
-                setStateData({
-                    ...stateData,
-                    title: '新增用户',
-                    id: null
-                });
-                setIsVisible(true);
-            }
+             // 新增
+            setStateData({
+                ...stateData,
+                title: '新增图标',
+                id: null
+            });
+            setIsVisible(true);
         }
     };
-    const delUser = ({id}) => {
+    const delIcon = ({id}) => {
         return e => {
-            deleteUserApi({id}).then(res => {
+            delIconApi({id}).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     message.success(res.data.message);
                     getDataList();
@@ -124,27 +118,15 @@ const User = props => {
         }
     };
     const confirm = val => {
-        if (val.id) {
-            updateUserApi(val).then(res => {
-                if(res.code === RES_STATUS.SUCCESS_CODE) {
-                    message.success(res.data.message);
-                    getDataList();
-                    setIsVisible(false);
-                } else {
-                    message.error(res.message);
-                }
-            })
-        } else {
-            saveUserApi(val).then(res => {
-                if(res.code === RES_STATUS.SUCCESS_CODE) {
-                    message.success(res.data.message);
-                    getDataList();
-                    setIsVisible(false);
-                } else {
-                    message.error(res.message);
-                }
-            })
-        }
+        saveIconApi(val).then(res => {
+            if (res.code === RES_STATUS.SUCCESS_CODE) {
+                message.success(res.data.message);
+                getDataList();
+                setIsVisible(false);
+            } else {
+                message.error(res.message);
+            }
+        })
     };
     const cancel = () => {
         setIsVisible(false);
@@ -153,9 +135,12 @@ const User = props => {
         getDataList();
         getFormConfig();
     }, []);
+    useEffect(() => {
+        getDataList();
+    }, [pageInfo]);
     const { dataList, title, id, total, fieldArr } = stateData;
     return (
-        <div className='user-container'>
+        <div className='icon-list-container'>
             <div className='search-box'>
                 <Form
                     layout='inline'
@@ -165,8 +150,8 @@ const User = props => {
                     form={form}
                 >
                     <Item
-                        label='用户名'
-                        name='username'
+                        label='图标名称'
+                        name='iconName'
                     >
                         <Input/>
                     </Item>
@@ -186,9 +171,12 @@ const User = props => {
                         total,
                         showSizeChanger: true,
                         showTotal: total => `共${total}条`,
-                        onChange: (current, pageSize) => {
-                            console.log(current);
-                            console.log(pageSize);
+                        onChange: (first, rows) => {
+                            setPageInfo({
+                                ...pageInfo,
+                                first,
+                                rows
+                            });
                         }
                     }}
                 />
@@ -200,10 +188,9 @@ const User = props => {
                 renderList={renderList}
                 confirm={confirm}
                 cancel={cancel}
-                viewFunc={viewUserApi}
                 fieldArr={fieldArr}
             />
         </div>
     )
 };
-export default User
+export default Icon;

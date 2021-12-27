@@ -1,5 +1,8 @@
 import React from 'react';
-import { Dashboard, Menu, Table, TableInfo, FormGenerator, User } from './importComp'
+import {
+    Dashboard, Menu, Table, TableInfo, FormGenerator, User,
+    Icon
+} from './importComp'
 
 export const getTabsComponent = key => {
     let newKey = key;
@@ -35,6 +38,9 @@ export const getTabsComponent = key => {
             break;
         case '/user':
             tab.component = <User />;
+            break;
+        case '/icon':
+            tab.component = <Icon />;
             break;
         default:
             break;

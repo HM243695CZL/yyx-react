@@ -4,7 +4,7 @@ export function getMenuListApi(data) {
     return request({
         url: '/menu/list',
         method: 'get',
-        data: request.adornData(data)
+        data: request.adornParams(data)
     })
 }
 export function getMenuPageApi(data) {
@@ -33,6 +33,14 @@ export function editMenuApi(data) {
 export function delMenuApi(data) {
     return request({
         url: '/menu/delete',
+        method: 'post',
+        data: request.adornData(data)
+    })
+}
+
+export function viewMenuApi(data) {
+    return request({
+        url: '/menu/view',
         method: 'post',
         data: request.adornData(data)
     })
