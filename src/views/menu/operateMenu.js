@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Modal, Form, Input, Select, Switch, TreeSelect, Radio, InputNumber} from 'antd';
+import {Modal, Form, Input, Switch, TreeSelect, Radio, InputNumber, Button} from 'antd';
+import cx from 'classnames'
 import {getMenuListApi} from '@/api/menu';
 import {arrayToTree} from '@/utils';
-
+import  './index.less'
+import {iconList} from './iconList';
 const {Item} = Form;
 
 const OperateMenu = ({
@@ -13,7 +15,8 @@ const OperateMenu = ({
     rowData
 }) => {
     const [parentMenu, setParentMenu] = useState([]);
-    const [tipTxt, setTipTxt] = useState('菜单')
+    const [showIcon, setShowIcon] = useState(false);
+    const [tipTxt, setTipTxt] = useState('菜单');
     const [form] = Form.useForm();
     useEffect(() => {
         if(isShow) {
@@ -36,6 +39,15 @@ const OperateMenu = ({
             val.id = rowData.id;
             confirm(val);
         })
+    };
+    const showIconList = () => {
+        setShowIcon(true);
+    };
+    const closeIcon = () => {
+        setShowIcon(false);
+    };
+    const confirmIcon = () => {
+        console.log(111);
     };
     return (
         <div className='operate-menu-container'>
@@ -104,7 +116,13 @@ const OperateMenu = ({
                         name='icon'
                         rules={[]}
                     >
-                        <Input placeholder='图标' allowClear autoComplete='off'/>
+                        <div className='icon-box'>
+                            {
+                                rowData.icon && <i className={'fa fa-' + rowData.icon} />
+                            }
+                            <Button onClick={e => showIconList()}>选择图标</Button>
+                        </div>
+                        {/*<Input placeholder='图标' allowClear autoComplete='off'/>*/}
                     </Item>
                     <Item
                         label='排序'
@@ -128,6 +146,32 @@ const OperateMenu = ({
                         <Switch defaultChecked={rowData.hidden}/>
                     </Item>
                 </Form>
+            </Modal>
+            <Modal
+                title='图标列表'
+                visible={showIcon}
+                onCancel={closeIcon}
+                onOk={confirmIcon}
+                okText='确定'
+                cancelText='取消'
+                width='60%'
+                maskClosable={false}
+            >
+                <ul className='icon-list'>
+                    {
+                        iconList.map(item => {
+                            return (
+                                <li key={item} className={cx({
+                                    'active': rowData.icon === item
+                                })}>
+                                    <i className={
+                                        cx('fa fa-' + item)
+                                    } />
+                                </li>
+                            )
+                        })
+                    }
+                </ul>
             </Modal>
         </div>
     )

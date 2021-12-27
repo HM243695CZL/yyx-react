@@ -9,16 +9,16 @@ const login = params => dispatch => {
      */
     return new Promise(resolve => {
         loginApi(params).then(res => {
-            if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+            if(res.code === RES_STATUS.SUCCESS_CODE) {
                 dispatch({
                     type: SET_TOKEN,
-                    payload: res.data.token
+                    payload: res.data
                 });
-                dispatch({
-                    type: SET_USER_INFO,
-                    payload: res.data.userInfo
-                });
-                localStorage.setItem('token', res.data.token);
+                // dispatch({
+                //     type: SET_USER_INFO,
+                //     payload: res.data.userInfo
+                // });
+                localStorage.setItem('token', res.data);
             }
             resolve(res);
         })

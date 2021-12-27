@@ -36,7 +36,7 @@ const Menu = props => {
             dataIndex: 'icon',
             render: data => {
                 return (
-                    <i className={data}/>
+                    <i className={'fa fa-' + data}/>
                 )
             }
         },

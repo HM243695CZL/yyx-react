@@ -1,6 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 import merge from 'merge';
+import {message} from 'antd';
 import {getToken} from '@/utils';
 import store from '@/store';
 import {showLoading, hideLoading} from '@/store/actions/global';
@@ -49,17 +50,18 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     response => {
         // closeLoading();
-        if(response.data.status === 401) {
-            // token超时，跳转到登录
-            sessionStorage.clear();
-            localStorage.clear();
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000)
-        }
         return response.data;
     },
     error => {
+        if (error.response.data.code === 401) {
+            // token超时，跳转到登录
+            message.error('token已过期，请重新登录');
+            // sessionStorage.clear();
+            // localStorage.clear();
+            // setTimeout(() => {
+            //     window.location.reload();
+            // }, 1000)
+        }
         // closeLoading();
         return Promise.reject(error);
     }

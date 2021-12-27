@@ -29,7 +29,7 @@ class Login extends Component {
     login = formVal => {
         const {handleLogin} = this.props;
         handleLogin(formVal).then(res => {
-            if(res.head.errorCode === RES_STATUS.SUCCESS_CODE) {
+            if(res.code === RES_STATUS.SUCCESS_CODE) {
                 // 获取菜单列表
                 this.getMenuList();
             } else {
@@ -51,7 +51,7 @@ class Login extends Component {
                 const {history} = this.props;
                 history.replace('/dashboard');
                 // 通过重新刷新来实现路由表的渲染
-                window.location.reload();
+                // window.location.reload();
             }
         })
     };
@@ -109,6 +109,7 @@ class Login extends Component {
                             ]}
                         >
                             <Input autoComplete='off'
+                                   type='password'
                                    name='password' />
                         </Form.Item>
                         <Form.Item {...tailLayout}>
