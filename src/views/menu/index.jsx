@@ -145,6 +145,7 @@ const Menu = props => {
                 }
             })
         } else {
+            delete val.id;
             saveMenuApi(val).then(res => {
                 if(res.code === RES_STATUS.SUCCESS_CODE) {
                     message.success(res.data.message);

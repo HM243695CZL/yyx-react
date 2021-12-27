@@ -62,7 +62,7 @@ const User = props => {
         viewFormConfigApi({
             formKey: store.getState().user.formInfo.UserFormKey
         }).then(res => {
-            if (res.code === RES_STATUS.SUCCESS_CODE) {
+            if (res.code === RES_STATUS.SUCCESS_CODE && res.data) {
                 setRenderList(JSON.parse(res.data.configData));
             } else {
                 message.error(`获取表单配置失败，

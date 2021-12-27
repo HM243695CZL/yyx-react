@@ -5,7 +5,6 @@ import {Link, withRouter} from 'react-router-dom';
 import {addTagList, changeCurrentPath} from '@/store/actions';
 import {getMenu} from '@/utils';
 
-
 const SubMenu = Menu.SubMenu;
 const MenuComponent = props => {
     const {history, collapsed, theme} = props;
@@ -18,13 +17,12 @@ const MenuComponent = props => {
      * tagList最多存在15个，当>= 15时，删除第一个
      */
     const handleMenuSelect = ({ key }) => {
-        const {addTagList, changeCurrentPath, location, match} = props;
+        const {addTagList, location, match} = props;
         const tabKey = key + location.search;
         addTagList({
             tabKey,
             params: match.params
         });
-        // changeCurrentPath(key);
     };
     return (
         <div className='menu-container'>
@@ -86,6 +84,7 @@ const mapStateToProps = state => ({
     userInfo: state.user.userInfo,
     tagList: state.UI.tagList,
     collapsed: state.UI.collapsed,
+    currentPath: state.UI.currentPath
 });
 
 const mapDispatchToProps = dispatch => ({
