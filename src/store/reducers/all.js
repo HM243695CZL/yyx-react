@@ -29,8 +29,6 @@ const userState = {
     userInfo: {},
     formInfo: {
         UserFormKey: 'UserFormKey',
-        CategoryKey: 'CategoryKey',
-        GoodsKey: 'GoodsKey',
         IconFormKey: 'IconFormKey'
     }
 };

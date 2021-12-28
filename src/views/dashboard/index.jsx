@@ -49,7 +49,6 @@ class Dashboard extends Component{
         );
         return (
             <div className='dashboard-container'>
-                <Input/>
                 <Row gutter={10}>
                     <Col md={8}>
                         <Panel title='快捷通道' height={quickCardHeight} showControl>
