@@ -58,11 +58,13 @@ service.interceptors.response.use(
         } else if (error.response.data.code === 401) {
             // token超时，跳转到登录
             message.error('token已过期，请重新登录');
-            // sessionStorage.clear();
-            // localStorage.clear();
+            sessionStorage.clear();
+            localStorage.clear();
             // setTimeout(() => {
             //     window.location.reload();
             // }, 1000)
+        } else if (error.response.status === 404) {
+            message.error(`请求接口【${error.response.config.url}】不存在!`);
         }
         // closeLoading();
         return Promise.reject(error);
@@ -94,3 +96,14 @@ service.adornData = (data = {}, openDefaultdata = true, contentType = 'json') =>
 };
 export default service;
 
+export function get(url, params = {}) {
+    return new Promise((resolve, reject) => {
+        service.get(url, {
+            params
+        }).then(res => {
+            resolve(res);
+        }).catch(err => {
+            reject(err)
+        })
+    })
+}
