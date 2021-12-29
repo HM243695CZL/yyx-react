@@ -37,3 +37,8 @@ export const Icon = Loadable({
     loading: Loading,
     delay: 150
 });
+export const Category = Loadable({
+    loader: () => import('@/views/category/index.jsx'),
+    loading: Loading,
+    delay: 150
+});
