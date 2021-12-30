@@ -226,8 +226,7 @@ const Menu = props => {
                         showSizeChanger: true,
                         showTotal: total => `共${total}`,
                         onChange: (current, pageSize) => {
-                            console.log(current);
-                            console.log(pageSize);
+
                         }
                     }}
                 />

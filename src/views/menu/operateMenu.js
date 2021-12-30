@@ -138,6 +138,11 @@ const OperateMenu = ({
                                 maxHeight: 400,
                                 overflow: 'auto'
                             }}
+                            fieldNames={{
+                                label: 'title',
+                                value: 'id',
+                                children: 'children'
+                            }}
                             treeData={parentMenu}
                         />
                     </Item>
@@ -196,8 +201,8 @@ const OperateMenu = ({
                                     title={item}
                                     onClick={e => confirmIcon(item)}
                                     className={cx({
-                                    'active': init.icon === item
-                                })}>
+                                        'active': init.icon === item
+                                    })}>
                                     <i className={
                                         cx('fa fa-' + item)
                                     } />
