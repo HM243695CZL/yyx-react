@@ -138,6 +138,11 @@ const OperateMenu = ({
                                 maxHeight: 400,
                                 overflow: 'auto'
                             }}
+                            fieldNames={{
+                                label: 'title',
+                                value: 'id',
+                                children: 'children'
+                            }}
                             treeData={parentMenu}
                         />
                     </Item>
