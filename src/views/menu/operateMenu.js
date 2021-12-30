@@ -68,6 +68,16 @@ const OperateMenu = ({
     const closeIcon = () => {
         setShowIcon(false);
     };
+    const changeParentMenu = data => {
+        setInit({
+            ...init,
+            parentId: data || ''
+        });
+        form.setFieldsValue({
+            ...init,
+            parentId: data || ''
+        })
+    };
     const confirmIcon = icon => {
         setInit({
             ...init,
@@ -143,6 +153,7 @@ const OperateMenu = ({
                                 value: 'id',
                                 children: 'children'
                             }}
+                            onChange={changeParentMenu}
                             treeData={parentMenu}
                         />
                     </Item>
