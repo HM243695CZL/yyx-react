@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ConfigProvider, Row, Pagination } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
-const pageSizeOptions = [3, 5, 10, 20, 50, 100];
+const pageSizeOptions = [10, 20, 50, 100];
 export default function MyPagination({
     total,
     page,
