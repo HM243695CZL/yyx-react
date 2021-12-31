@@ -42,3 +42,8 @@ export const Category = Loadable({
     loading: Loading,
     delay: 150
 });
+export const GoodsType = Loadable({
+    loader: () => import('@/views/goods/goodsType/index.jsx'),
+    loading: Loading,
+    delay: 150
+});
