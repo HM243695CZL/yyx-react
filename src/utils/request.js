@@ -65,6 +65,8 @@ service.interceptors.response.use(
             // }, 1000)
         } else if (error.response.status === 404) {
             message.error(`请求接口【${error.response.config.url}】不存在!`);
+        } else {
+            message.error(`服务器错误：【${error.response.data.message}】`)
         }
         // closeLoading();
         return Promise.reject(error);
