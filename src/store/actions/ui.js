@@ -20,6 +20,12 @@ const addTagList = payload => (dispatch, getState) => {
             (JSON.parse(getMenu())|| []).map(item => {
                 if (item.path === payload.tabKey) {
                     payload.title = item.title
+                } else if (item.children && item.children.length) {
+                    item.children.map(ele => {
+                        if (ele.path === payload.tabKey) {
+                            payload.title = ele.title
+                        }
+                    })
                 }
                 if (payload.tabKey === '/') {
                     payload.title = '首页'
