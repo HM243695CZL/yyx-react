@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Button, message, Table, Tag, Input, Form, Upload } from 'antd';
 import {getMenuListApi, getMenuPageApi, saveMenuApi, delMenuApi, editMenuApi} from '@/api/menu';
 import { uploadFileApi } from '@/api/common';
-import Pagination from '@/components/Pagination';
+import MyPagination from '@/components/Pagination';
 import OperateMenu from './operateMenu'
 import {RES_STATUS,  PageEntity, FilterEnum} from '@/utils/code';
 import { PaginationUtils } from '@/utils/PaginationUtils';
@@ -21,6 +21,7 @@ const Menu = props => {
     });
     const [isVisible, setIsVisible] = useState(false);
     const [fileList, setFileList] = useState([]);
+    const [pageInfo, setPageInfo] = useState(cloneDeep(PageEntity));
     const columns = [
         {
             title: '菜单名称',
@@ -73,12 +74,13 @@ const Menu = props => {
             }
         }
     ];
-    const getDataList = () => {
+    const getDataList = pageInfo => {
         form.validateFields().then(val => {
-            let pageInfo = cloneDeep(PageEntity);
             for (const o in val) {
                 if (val[o]) {
                     pageInfo.filters[o] = PaginationUtils.filters(val[o], FilterEnum.CONTAINS);
+                } else {
+                    delete pageInfo.filters[o];
                 }
             }
             getMenuPageApi(pageInfo).then(res => {
@@ -121,12 +123,34 @@ const Menu = props => {
 
         }
     };
+    const changePage = data => {
+        let obj = {
+            ...pageInfo,
+            ...data
+        };
+        if (data.rows !== pageInfo.rows) {
+            // 修改每页条数
+            obj.first = 1;
+        }
+        setPageInfo(obj);
+        getDataList(obj);
+    };
+    const clickSearch = () => {
+        setPageInfo({
+            ...pageInfo,
+            first: 1
+        });
+        getDataList({
+            ...pageInfo,
+            first: 1
+        });
+    };
     const delMenu = ({id}) => {
         return e => {
             delMenuApi({id}).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     message.success(res.data.message);
-                    getDataList();
+                    getDataList(pageInfo);
                 } else {
                     message.error(res.message);
                 }
@@ -138,7 +162,7 @@ const Menu = props => {
             editMenuApi(val).then(res => {
                 if(res.code === RES_STATUS.SUCCESS_CODE) {
                     message.success(res.data.message);
-                    getDataList();
+                    getDataList(pageInfo);
                     setIsVisible(false);
                 } else {
                     message.error(res.message);
@@ -149,7 +173,7 @@ const Menu = props => {
             saveMenuApi(val).then(res => {
                 if(res.code === RES_STATUS.SUCCESS_CODE) {
                     message.success(res.data.message);
-                    getDataList();
+                    getDataList(pageInfo);
                     setIsVisible(false);
                 } else {
                     message.error(res.message);
@@ -177,7 +201,7 @@ const Menu = props => {
         })
     };
     useEffect(() => {
-        getDataList();
+        getDataList(pageInfo);
     }, []);
     const {dataList, title, total, menuId} = stateData;
     return (
@@ -212,25 +236,21 @@ const Menu = props => {
                         <Button>上传</Button>
                     </Upload>
                     <Button type='primary' onClick={showModal()}>新增</Button>
-                    <Button type='default' onClick={e => getDataList()}>查询</Button>
+                    <Button type='default' onClick={e => clickSearch()}>查询</Button>
                 </div>
             </div>
-            <Pagination>
-                <Table
-                    rowKey={record => record.id}
-                    columns={columns}
-                    dataSource={dataList}
-                    bordered
-                    pagination={{
-                        total,
-                        showSizeChanger: true,
-                        showTotal: total => `共${total}`,
-                        onChange: (current, pageSize) => {
-
-                        }
-                    }}
-                />
-            </Pagination>
+            <Table
+                rowKey={record => record.id}
+                columns={columns}
+                dataSource={dataList}
+                bordered
+                pagination={false}
+            />
+            <MyPagination
+                page={pageInfo.first}
+                changePage={changePage}
+                total={total}
+            />
             <OperateMenu
                 title={title}
                 isShow={isVisible}

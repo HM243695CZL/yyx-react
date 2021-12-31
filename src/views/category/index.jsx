@@ -8,7 +8,7 @@ import { getCategoryListPageApi, saveCategoryApi, updateCategoryApi,
 import { viewFormConfigApi } from '@/api/formConfig';
 import { RES_STATUS, PageEntity, FilterEnum } from '@/utils/code';
 import { PaginationUtils } from '@/utils/PaginationUtils';
-import Pagination from '@/components/Pagination';
+import MyPagination from '@/components/Pagination';
 import CommonModal from '@/components/CommonModal';
 import store from '@/store';
 import './index.less';
@@ -72,7 +72,7 @@ const Category = props => {
             }
         })
     };
-    const getDataList = () => {
+    const getDataList = pageInfo => {
         form.validateFields().then(val => {
             for (const o in val) {
                 if (val[o]) {
@@ -113,12 +113,34 @@ const Category = props => {
             }
         }
     };
+    const changePage = data => {
+        let obj = {
+            ...pageInfo,
+            ...data
+        };
+        if (data.rows !== pageInfo.rows) {
+            // 修改每页条数
+            obj.first = 1;
+        }
+        setPageInfo(obj);
+        getDataList(obj);
+    };
+    const clickSearch = () => {
+        setPageInfo({
+            ...pageInfo,
+            first: 1
+        });
+        getDataList({
+            ...pageInfo,
+            first: 1
+        });
+    };
     const delCategory = ({id}) => {
         return e => {
             delCategoryApi({id}).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     message.success(res.data.message);
-                    getDataList();
+                    getDataList(pageInfo);
                 } else {
                     message.error(res.message)
                 }
@@ -130,7 +152,7 @@ const Category = props => {
             updateCategoryApi(val).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     message.success(res.data.message);
-                    getDataList();
+                    getDataList(pageInfo);
                     setIsVisible(false);
                 } else {
                     message.error(res.message);
@@ -140,7 +162,7 @@ const Category = props => {
             saveCategoryApi(val).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     message.success(res.data.message);
-                    getDataList();
+                    getDataList(pageInfo);
                     setIsVisible(false);
                 } else {
                     message.error(res.message);
@@ -152,12 +174,9 @@ const Category = props => {
         setIsVisible(false);
     };
     useEffect(() => {
-        getDataList();
+        getDataList(pageInfo);
         getFormConfig();
     }, []);
-    useEffect(() => {
-        getDataList();
-    }, [pageInfo]);
     const { dataList, title, id, total, fieldArr } = stateData;
     return (
         <div className='category-container'>
@@ -178,29 +197,21 @@ const Category = props => {
                 </Form>
                 <div className="btn-box">
                     <Button type='primary' onClick={showModal()}>新增</Button>
-                    <Button type='default' onClick={e => getDataList()}>查询</Button>
+                    <Button type='default' onClick={e => clickSearch()}>查询</Button>
                 </div>
             </div>
-            <Pagination>
-                <Table
-                    rowKey={record => record.id}
-                    columns={columns}
-                    dataSource={dataList}
-                    bordered
-                    pagination={{
-                        total,
-                        showSizeChanger: true,
-                        showTotal: total => `共${total}条`,
-                        onChange: (first, rows) => {
-                            setPageInfo({
-                                ...pageInfo,
-                                first,
-                                rows
-                            });
-                        }
-                    }}
-                />
-            </Pagination>
+            <Table
+                rowKey={record => record.id}
+                columns={columns}
+                dataSource={dataList}
+                bordered
+                pagination={false}
+            />
+            <MyPagination
+                page={pageInfo.first}
+                changePage={changePage}
+                total={total}
+            />
             <CommonModal
                 title={title}
                 isVisible={isVisible}
