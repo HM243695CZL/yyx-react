@@ -1,10 +1,10 @@
 import request from '@/utils/request';
 
-export function getMenuListApi(data) {
+export function getMenuListApi(params) {
     return request({
         url: '/menu/list',
         method: 'get',
-        data: request.adornParams(data)
+        params
     })
 }
 export function getMenuPageApi(data) {
@@ -30,18 +30,18 @@ export function editMenuApi(data) {
     })
 }
 
-export function delMenuApi(data) {
+export function delMenuApi(params) {
     return request({
         url: '/menu/delete',
         method: 'post',
-        data: request.adornData(data)
+        params
     })
 }
 
-export function viewMenuApi(data) {
+export function viewMenuApi(params) {
     return request({
         url: '/menu/view',
         method: 'post',
-        data: request.adornData(data)
+        params
     })
 }

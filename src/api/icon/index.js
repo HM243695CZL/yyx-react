@@ -8,11 +8,11 @@ export function getIconListPageApi(data) {
     })
 }
 
-export function getIconListApi(data) {
+export function getIconListApi(params) {
     return request({
         url: '/icon/list',
         method: 'get',
-        data: request.adornParams(data)
+        params
     })
 }
 
@@ -23,10 +23,10 @@ export function saveIconApi(data) {
         data: request.adornData(data)
     })
 }
-export function delIconApi(data) {
+export function delIconApi(params) {
     return request({
         url: '/icon/delete',
         method: 'post',
-        data: request.adornData(data)
+        params
     })
 }

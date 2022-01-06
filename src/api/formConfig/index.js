@@ -32,10 +32,10 @@ export function updateFormConfigApi(data) {
     })
 }
 
-export function viewFormConfigApi(data) {
+export function viewFormConfigApi(params) {
     return request({
         url: '/form-config/view',
-        method: 'post',
-        data: request.adornData(data)
+        method: 'get',
+        params
     })
 }

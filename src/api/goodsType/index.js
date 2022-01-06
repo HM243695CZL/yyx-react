@@ -7,6 +7,14 @@ export function getGoodsTypePageApi(data) {
         data: request.adornData(data)
     })
 }
+
+export function getGoodsTypeListApi(params) {
+    return request({
+        url: '/goods-type/list',
+        method: 'get',
+        params
+    })
+}
 export function saveGoodsTypeApi(data) {
     return request({
         url: '/goods-type/create',

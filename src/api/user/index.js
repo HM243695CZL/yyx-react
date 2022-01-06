@@ -29,17 +29,17 @@ export function updateUserApi(data) {
         data: request.adornData(data)
     })
 }
-export function deleteUserApi(data) {
+export function deleteUserApi(params) {
     return request({
         url: '/user/delete',
         method: 'post',
-        data: request.adornData(data)
+        params
     })
 }
-export function viewUserApi(data) {
+export function viewUserApi(params) {
     return request({
         url: '/user/view',
         method: 'post',
-        data: request.adornData(data)
+        params
     })
 }
