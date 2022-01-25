@@ -119,7 +119,7 @@ const AppMain = props => {
             >
                 {
                     tagList.map(item => (
-                        <TabPane tab={<MyTab title={item.title} tag={item} />} key={item.tabKey}>
+                        <TabPane tab={<MyTab title={item.title || '标题'} tag={item} />} key={item.tabKey}>
                             {
                                 getTabsComponent(item.tabKey).component
                             }

@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     Dashboard, Menu, Table, TableInfo, FormGenerator, User,
-    Icon, Category, GoodsType, GoodsArgs
+    Icon, Category, GoodsType, GoodsArgs, GoodsList, GoodsInfo
 } from './importComp'
 
 export const getTabsComponent = key => {
@@ -45,11 +45,17 @@ export const getTabsComponent = key => {
         case '/category':
             tab.component = <Category />;
             break;
-        case '/goods/goodsType':
+        case '/goods/goods-type':
             tab.component = <GoodsType />;
             break;
-        case '/goods/goodsArgs':
+        case '/goods/goods-args':
             tab.component = <GoodsArgs />;
+            break;
+        case '/goods/goods-list':
+            tab.component = <GoodsList />;
+            break;
+        case '/goods-info':
+            tab.component = <GoodsInfo />;
             break;
         default:
             break;

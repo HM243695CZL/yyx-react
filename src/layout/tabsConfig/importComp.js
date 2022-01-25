@@ -52,3 +52,13 @@ export const GoodsArgs = Loadable({
     loading: Loading,
     delay: 150
 });
+export const GoodsList = Loadable({
+    loader: () => import('@/views/goods/goodsList/index.jsx'),
+    loading: Loading,
+    delay: 150
+});
+export const GoodsInfo = Loadable({
+    loader: () => import('@/views/goods/goodsList/info/index.jsx'),
+    loading: Loading,
+    delay: 150
+});
