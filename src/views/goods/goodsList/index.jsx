@@ -34,6 +34,11 @@ const GoodsList = props => {
             align: 'center'
         },
         {
+            title: '商品封面',
+            dataIndex: 'source',
+            render: (text, record) => <img className='thumb-img' src={window.PLATFORM_CONFIG.previewImgUrl + record.source.newFileName} alt=''/>
+        },
+        {
             title: '售价',
             dataIndex: 'sellPriceStart',
             align: 'center',
@@ -61,7 +66,7 @@ const GoodsList = props => {
             title: '状态',
             dataIndex: 'status',
             align: 'center',
-            render: data => <Tag color={data ? 'success' : 'warning'}>{data ? '上架' : '下架'}</Tag>
+            render: data => <Tag color={data ? '#87d068' : 'warning'}>{data ? '上架' : '下架'}</Tag>
         },
         {
             title: '操作',
