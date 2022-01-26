@@ -30,24 +30,29 @@ const GoodsType = props => {
         {
             title: '序号',
             dataIndex: 'index',
+            align: 'center',
             render: (text, record, index) => <span>{index + 1}</span>
         },
         {
             title: '分类名称',
-            dataIndex: 'typeName'
+            dataIndex: 'typeName',
+            align: 'center',
         },
         {
             title: '创建人',
-            dataIndex: 'createUser'
+            dataIndex: 'createUser',
+            align: 'center',
         },
         {
             title: '创建时间',
             dataIndex: 'createdTime',
+            align: 'center',
             render: data => <span>{ dayjs(data).format('YYYY-MM-DD HH:mm:ss')}</span>
         },
         {
             title: '操作',
             key: 'action',
+            align: 'center',
             width: 120,
             render(data) {
                 return (

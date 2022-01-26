@@ -24,3 +24,9 @@ ul{
 ul li{
     list-style: none;
 }
+.w120{
+    width: 120px;
+}
+.w180{
+    width: 180px;
+}

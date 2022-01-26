@@ -57,10 +57,10 @@ const AppMain = props => {
     const closeAllTab = () => {
         emptyTagList();
         addTagList({
-            tabKey: '/'
+            tabKey: '/dashboard'
         });
         changeCurrentPath({
-            tabKey: '/'
+            tabKey: '/dashboard'
         })
     };
     const removeTab = tabKey => {
@@ -76,12 +76,12 @@ const AppMain = props => {
         if (tabKey === tagList[length - 1].tabKey && currentPath === tabKey) {
             // 关闭最后一个标签，跳转到首页
             if (length === 1) {
-                props.history.push('/');
+                props.history.push('/dashboard');
                 changeCurrentPath({
-                    tabKey: '/'
+                    tabKey: '/dashboard'
                 });
                 addTagList({
-                    tabKey: '/',
+                    tabKey: '/dashboard',
                     title: '首页'
                 })
             } else {
@@ -103,16 +103,24 @@ const AppMain = props => {
         }
     }, [visible]);
     useEffect(() => {
-        const locationCurrentPath = props.history.location.pathname;
+        const locationCurrentPath = props.history.location.pathname + props.history.location.search;
+        let titleObj = {};
+        if (locationCurrentPath.indexOf('add-goods-info') > -1) {
+            titleObj.title = '新增商品';
+        }
+        if (locationCurrentPath.indexOf('goods-id') > -1) {
+            titleObj.title = '修改商品';
+        }
         addTagList({
-            tabKey: locationCurrentPath
+            ...titleObj,
+            tabKey: locationCurrentPath,
         })
     }, []);
     return (
         <>
             <Tabs
                 hideAdd
-                type={(currentPath === '/' && tagList.length === 1) ? 'card' : 'editable-card'}
+                type={(currentPath === '/dashboard' && tagList.length === 1) ? 'card' : 'editable-card'}
                 activeKey={currentPath}
                 onChange={changeTab}
                 onEdit={removeTab}
@@ -134,7 +142,7 @@ const AppMain = props => {
                 }}
             >
                 {
-                    currentPath !== '/' && <li onClick={closeThisTab}>关闭</li>
+                    currentPath !== '/dashboard' && <li onClick={closeThisTab}>关闭</li>
                 }
                 <li onClick={closeOtherTab}>关闭其他</li>
                 <li onClick={closeAllTab}>关闭全部</li>

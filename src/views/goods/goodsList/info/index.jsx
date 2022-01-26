@@ -3,48 +3,66 @@ import {
     Form, Input, Row, Col, Select, InputNumber,
     Switch, Card, Upload, Button, message, Checkbox
 } from 'antd';
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
 import {getGoodsTypeListApi} from '@/api/goodsType';
 import {getGoodsArgsListApi} from '@/api/goodsArgs';
-import {saveGoodsApi} from '@/api/goods';
+import {saveGoodsApi, viewGoodsApi, updateGoodsApi} from '@/api/goods';
 import { uploadFileApi } from '@/api/common';
-import './index.less';
 import {RES_STATUS} from '@/utils/code';
+import { cutTagList, addTagList, changeCurrentPath} from '@/store/actions';
+import './index.less';
 const {Item} = Form;
 const {TextArea} = Input;
 const {Option} = Select;
-const { Group } = Checkbox;
 const GoodsInfo = props => {
+    const { cutTagList, currentPath, tagList, addTagList, changeCurrentPath } = props;
     const [form] = Form.useForm();
+    const [goodsId, setGoodsId] = useState('');
     const [fileList, setFileList] = useState([]);
     const [goodsTypeList, setGoodsTypeList] = useState([]);
     const [goodsArgsList, setGoodsArgsList] = useState([]);
     const [argsId, setArgsId] = useState([]);
     const [argsArrItem, setArgsArrItem] = useState([]);
     const [coverImgId, setCoverImgId] = useState('');
+    const [freeShopping, setFreeShopping] = useState(true);
     const customUploadImg = files => {
         const { file } = files;
         let formData = new FormData();
         formData.append('file', file);
         uploadFileApi(formData).then(res => {
             setFileList([
-                ...fileList,
                 {
                     uid: res.data.id,
                     name: file.name,
+                    thumbUrl: `${window.PLATFORM_CONFIG.previewImgUrl}${res.data.newFileName}`,
                     status: 'done'
                 }
             ]);
             setCoverImgId(res.data.id);
         })
     };
-    const changeArgsId = value => {
-        let arr = [];
-        goodsArgsList.map(item => {
-            if (value.includes(item.value)) {
-                arr.push(item);
-            }
-        });
-        setArgsArrItem(arr);
+    const changeArgsId = (value, data) => {
+        if (value.target.checked) {
+            setArgsId([...argsId, data.value]);
+            setArgsArrItem([...argsArrItem, data]);
+        } else {
+            argsArrItem.map((item, index) => {
+                if (item.value === data.value) {
+                    argsArrItem.splice(index, 1);
+                }
+            });
+            setArgsArrItem([...argsArrItem]);
+            argsId.map((item, index) => {
+                if (item === data.value) {
+                    argsId.splice(index, 1);
+                }
+            });
+            setArgsId([...argsId]);
+        }
+    };
+    const changeFreeShopping = freeShoppingValue => {
+        setFreeShopping(freeShoppingValue);
     };
     const changeArgs = (value, data) => {
         argsArrItem.map(item => {
@@ -54,16 +72,57 @@ const GoodsInfo = props => {
         });
         setArgsArrItem([...argsArrItem]);
     };
+    const clickCancel = () => {
+        const length = tagList.length;
+        if (length >= 2) {
+            console.log(tagList[length - 2].tabKey);
+            props.history.push(tagList[length - 2].tabKey);
+            changeCurrentPath({
+                tabKey: tagList[length - 2].tabKey
+            });
+        } else {
+            props.history.push('/goods/goods-list');
+            changeCurrentPath({
+                tabKey: '/goods/goods-list'
+            });
+            addTagList({
+                tabKey: '/goods/goods-list'
+            })
+        }
+        cutTagList({
+            tabKey: currentPath
+        });
+    };
     const clickConfirm = () => {
         form.validateFields().then(val => {
             let obj = {
                 ...val,
                 coverImgId,
-                argsId: JSON.stringify(argsArrItem)
+                argsId: JSON.stringify(argsArrItem),
+                freeShopping: freeShopping ? 1 : 0
             };
-            saveGoodsApi(obj).then(res => {
-                console.log(res);
-            })
+            if (goodsId) {
+                updateGoodsApi({
+                    ...obj,
+                    id: goodsId
+                }).then(res => {
+                    if (res.code === RES_STATUS.SUCCESS_CODE) {
+                        message.success(res.data.message);
+                        clickCancel();
+                    } else {
+                        message.error(res.message);
+                    }
+                })
+            } else {
+                saveGoodsApi(obj).then(res => {
+                    if (res.code === RES_STATUS.SUCCESS_CODE) {
+                        message.success(res.data.message);
+                        clickCancel();
+                    } else {
+                        message.error(res.message);
+                    }
+                })
+            }
         });
     };
     const getGoodsTypeList = () => {
@@ -95,6 +154,34 @@ const GoodsInfo = props => {
     useEffect(() => {
         getGoodsTypeList();
         getGoodsArgsList();
+        if (currentPath.indexOf('goods-id') > -1) {
+            setGoodsId(currentPath.split('=')[1]);
+            // 查看数据
+            viewGoodsApi({
+                id: currentPath.split('=')[1]
+            }).then(res => {
+                if (res.code === RES_STATUS.SUCCESS_CODE) {
+                    const { id, originFileName, newFileName } = res.data.source;
+                    form.setFieldsValue(res.data);
+                    setFileList([
+                        {
+                            uid: id,
+                            name: originFileName,
+                            status: 'done',
+                            thumbUrl: `${window.PLATFORM_CONFIG.previewImgUrl}${newFileName}`
+                        }
+                    ]);
+                    setFreeShopping(res.data.freeShopping);
+                    setCoverImgId(id);
+                    let arr = [];
+                    JSON.parse(res.data.argsId).map(item => {
+                       arr.push(item.value);
+                    });
+                    setArgsId([...arr]);
+                    setArgsArrItem(JSON.parse(res.data.argsId));
+                }
+            })
+        }
     }, []);
     return (
         <div className='goods-info-container'>
@@ -225,6 +312,8 @@ const GoodsInfo = props => {
                             >
                                 <Upload
                                     fileList={fileList}
+                                    listType="picture"
+                                    maxCount={1}
                                     customRequest={e => customUploadImg(e)}
                                 >
                                     <Button>上传封面</Button>
@@ -236,7 +325,7 @@ const GoodsInfo = props => {
                                 label='是否包邮'
                                 name='freeShopping'
                             >
-                                <Switch checkedChildren="是" unCheckedChildren="否" defaultChecked />
+                                <Switch checkedChildren="是" unCheckedChildren="否" checked={freeShopping} onChange={changeFreeShopping} />
                             </Item>
                         </Col>
                     </Row>
@@ -245,7 +334,21 @@ const GoodsInfo = props => {
                     <Row gutter={16}>
                         <Col span={24}>
                             可选参数：
-                            <Group options={goodsArgsList} defaultValue={argsId} onChange={changeArgsId} />
+                            {/*<Group options={goodsArgsList} checked={argsId} onChange={changeArgsId} />*/}
+                            <Row>
+                                {
+                                    goodsArgsList.map(item => {
+                                        return (
+                                            <Col span={4} key={item.value}>
+                                                <Checkbox value={item.value}
+                                                          checked={argsId.includes(item.value)}
+                                                          onChange={e => changeArgsId(e, item)}
+                                                >{item.label}</Checkbox>
+                                            </Col>
+                                        )
+                                    })
+                                }
+                            </Row>
                             <div className='box'>
                                 {
                                     argsArrItem.map(item => {
@@ -325,11 +428,25 @@ const GoodsInfo = props => {
                 </Card>
             </Form>
             <div className="btn-box">
-                <Button type='cancel'>取消</Button>
+                <Button type='cancel' onClick={clickCancel}>取消</Button>
                 <Button type='primary' onClick={clickConfirm}>确定</Button>
             </div>
         </div>
     )
 };
-
-export default GoodsInfo;
+const mapStateToProps = state => ({
+    tagList: state.UI.tagList,
+    currentPath: state.UI.currentPath
+});
+const mapDispatchToProps = dispatch => ({
+    cutTagList: payload => {
+        dispatch(cutTagList(payload))
+    },
+    addTagList: payload => {
+        dispatch(addTagList(payload))
+    },
+    changeCurrentPath: payload => {
+        dispatch(changeCurrentPath(payload))
+    }
+});
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(GoodsInfo));
