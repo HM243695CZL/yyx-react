@@ -8,7 +8,7 @@ import { RES_STATUS, PageEntity, FilterEnum } from '@/utils/code';
 import { PaginationUtils } from '@/utils/PaginationUtils';
 import {addTagList} from '@/store/actions';
 import MyPagination from '@/components/Pagination';
-import {getGoodsPageApi, delGoodsApi } from '@/api/goods';
+import {getGoodsPageApi, delGoodsApi, changeStatus } from '@/api/goods';
 import './index.less';
 const { Item } = Form;
 const { Option } = Select;
@@ -71,11 +71,7 @@ const GoodsList = props => {
             render(data) {
                 return (
                     <div className='operate-column'>
-                        {
-                            data.status ?
-                                <span className='operate-edit'>下架</span> :
-                                <span className='operate-edit'>上架</span>
-                        }
+                        <span className='operate-edit' onClick={e => clickStatus(data)}>{data.status ? '下' : '上'}架</span>
                         <span className='operate-edit' onClick={showModal(data)}>修改</span>
                         <span className="operate-del" onClick={delGoods(data)}>删除</span>
                     </div>
@@ -131,6 +127,21 @@ const GoodsList = props => {
                 })
             }
         }
+    };
+    /**
+     * 点击上架或下架
+     */
+    const clickStatus = data => {
+        changeStatus({
+            id: data.id
+        }).then( res => {
+            if (res.code === RES_STATUS.SUCCESS_CODE) {
+                message.success(res.data.message);
+                getDataList(pageInfo);
+            } else {
+                message.error(res.message);
+            }
+        });
     };
     const changePage = data => {
         let obj = {

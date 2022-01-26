@@ -39,3 +39,15 @@ export function viewGoodsApi(params) {
         params
     })
 }
+
+/**
+ * 上架或下架商品
+ * @param params
+ */
+export function changeStatus(params) {
+    return request({
+        url: '/goods/changeStatus',
+        method: 'get',
+        params
+    })
+}
