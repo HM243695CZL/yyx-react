@@ -9,6 +9,7 @@ import { PaginationUtils } from '@/utils/PaginationUtils';
 import {addTagList} from '@/store/actions';
 import MyPagination from '@/components/Pagination';
 import {getGoodsPageApi, delGoodsApi, changeStatus } from '@/api/goods';
+import {getGoodsTypeListApi} from '@/api/goodsType';
 import './index.less';
 const { Item } = Form;
 const { Option } = Select;
@@ -21,6 +22,7 @@ const GoodsList = props => {
         total: 0,
     });
     const [pageInfo, setPageInfo] = useState(cloneDeep(PageEntity));
+    const [goodsTypeList, setGoodsTypeList] = useState([]);
     const columns = [
         {
             title: '序号',
@@ -34,6 +36,11 @@ const GoodsList = props => {
             align: 'center'
         },
         {
+            title: '商品类别',
+            dataIndex: 'categoryName',
+            align: 'center'
+        },
+        {
             title: '商品封面',
             dataIndex: 'source',
             render: (text, record) => <img className='thumb-img' src={window.PLATFORM_CONFIG.previewImgUrl + record.source.newFileName} alt=''/>
@@ -42,6 +49,8 @@ const GoodsList = props => {
             title: '售价',
             dataIndex: 'sellPriceStart',
             align: 'center',
+            sorter: true,
+            filterMultiple: false,
             render: (text, record) => {
                 return record.sellPriceStart + '-' + record.sellPriceEnd + '￥'
             }
@@ -50,6 +59,8 @@ const GoodsList = props => {
             title: '销量',
             dataIndex: 'sellCount',
             align: 'center',
+            sorter: true,
+            filterMultiple: false,
         },
         {
             title: '库存',
@@ -60,6 +71,8 @@ const GoodsList = props => {
             title: '上架时间',
             dataIndex: 'publishTime',
             align: 'center',
+            sorter: true,
+            filterMultiple: false,
             render: (data, record) => record.status ? dayjs(data).format('YYYY-MM-DD HH:mm:ss') : '-'
         },
         {
@@ -84,6 +97,13 @@ const GoodsList = props => {
             }
         }
     ];
+    const getGoodsTypeList = () => {
+        getGoodsTypeListApi().then(res => {
+            if (res.code === RES_STATUS.SUCCESS_CODE) {
+                setGoodsTypeList(res.data);
+            }
+        });
+    };
     const getDataList = pageInfo => {
         form.validateFields().then(val => {
             for (const o in val) {
@@ -108,6 +128,28 @@ const GoodsList = props => {
                 }
             })
         })
+    };
+    const changeTable = (pagination, filters, sorter) => {
+        let obj = {};
+        if (sorter.order) {
+            obj = {
+                ...pageInfo,
+                multiSortMeta: [
+                    {
+                        field: sorter.field,
+                        order: sorter.order
+                    }
+                ]
+            };
+
+        } else {
+            obj = {
+                ...pageInfo,
+                multiSortMeta: []
+            }
+        }
+        setPageInfo(obj);
+        getDataList(obj);
     };
     const showModal = data => {
         return e => {
@@ -187,6 +229,9 @@ const GoodsList = props => {
             getDataList(pageInfo);
         }
     }, [currentPath]);
+    useEffect(() => {
+        getGoodsTypeList();
+    }, []);
     const { dataList, total } = stateData;
     return (
         <div className='goods-list-container'>
@@ -197,12 +242,29 @@ const GoodsList = props => {
                     wrapperCol={{span: 16}}
                     autoComplete='off'
                     form={form}
+                    initialValues={{
+                        status: ''
+                    }}
                 >
                     <Item
                         label='商品描述'
                         name='title'
                     >
                         <Input allowClear/>
+                    </Item>
+                    <Item
+                        label='商品类别'
+                        name='categoryId'
+                    >
+                        <Select style={{width: '180px'}} allowClear showSearch optionFilterProp="children">
+                            {
+                                goodsTypeList.map(item => {
+                                    return (
+                                        <Option value={item.id} key={item.id}>{item.typeName}</Option>
+                                    )
+                                })
+                            }
+                        </Select>
                     </Item>
                     <Item
                         label='状态'
@@ -226,6 +288,7 @@ const GoodsList = props => {
                 dataSource={dataList}
                 bordered
                 pagination={false}
+                onChange={changeTable}
              />
              <MyPagination
                  page={pageInfo.first}

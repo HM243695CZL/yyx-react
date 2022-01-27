@@ -296,7 +296,7 @@ const GoodsInfo = props => {
                                     }
                                 ]}
                             >
-                                <InputNumber className='w100' />
+                                <InputNumber className='w100' addonAfter='小时' />
                             </Item>
                         </Col>
                         <Col span={8}>

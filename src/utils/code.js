@@ -8,6 +8,7 @@ const PageEntity = {
     first: 1, // 第几页
     rows: 10, // 每页条数
     totalRecords: 1, // 总条数
+    multiSortMeta: [], // 排序字段
     sortOrder: -1, // 排序 1：asc升序 -1：desc降序
     filters: {}
 };
