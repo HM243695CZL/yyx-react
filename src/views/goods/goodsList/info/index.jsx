@@ -20,12 +20,15 @@ const GoodsInfo = props => {
     const [form] = Form.useForm();
     const [goodsId, setGoodsId] = useState('');
     const [fileList, setFileList] = useState([]);
+    const [carouselList, setCarouselList] = useState([]);
     const [goodsTypeList, setGoodsTypeList] = useState([]);
     const [goodsArgsList, setGoodsArgsList] = useState([]);
     const [argsId, setArgsId] = useState([]);
     const [argsArrItem, setArgsArrItem] = useState([]);
     const [coverImgId, setCoverImgId] = useState('');
+    const [carouselImgId, setCarouselImgId] = useState([]);
     const [freeShopping, setFreeShopping] = useState(true);
+    const [hourList] = useState([2, 6, 12, 24, 48, 72]);
     const customUploadImg = files => {
         const { file } = files;
         let formData = new FormData();
@@ -40,6 +43,26 @@ const GoodsInfo = props => {
                 }
             ]);
             setCoverImgId(res.data.id);
+        })
+    };
+    const changeCarousel = files => {
+        const { file } = files;
+        let formData = new FormData();
+        formData.append('file', file);
+        uploadFileApi(formData).then(res => {
+            setCarouselList([
+                ...carouselList,
+                {
+                    uid: res.data.id,
+                    name: file.name,
+                    thumbUrl: `${window.PLATFORM_CONFIG.previewImgUrl}${res.data.newFileName}`,
+                    status: 'done'
+                }
+            ]);
+            setCarouselImgId([
+                ...carouselImgId,
+                res.data.id
+            ]);
         })
     };
     const changeArgsId = (value, data) => {
@@ -98,6 +121,7 @@ const GoodsInfo = props => {
             let obj = {
                 ...val,
                 coverImgId,
+                carousel: carouselImgId,
                 argsId: JSON.stringify(argsArrItem),
                 freeShopping: freeShopping ? 1 : 0
             };
@@ -296,7 +320,11 @@ const GoodsInfo = props => {
                                     }
                                 ]}
                             >
-                                <InputNumber className='w100' addonAfter='小时' />
+                                <Select>
+                                    {
+                                        hourList.map(item => <Option value={item} key={item}>{item} 小时</Option>)
+                                    }
+                                </Select>
                             </Item>
                         </Col>
                         <Col span={8}>
@@ -314,6 +342,7 @@ const GoodsInfo = props => {
                                     fileList={fileList}
                                     listType="picture"
                                     maxCount={1}
+                                    accept='.bmp,.jpg,.png,.tif,.gif,.pcx,.tga,.exif,.fpx,.svg,.psd,.cdr,.pcd,.dxf,.ufo,.eps,.ai,.raw,.WMF,.webp'
                                     customRequest={e => customUploadImg(e)}
                                 >
                                     <Button>上传封面</Button>
@@ -329,12 +358,35 @@ const GoodsInfo = props => {
                             </Item>
                         </Col>
                     </Row>
+                    <Row gutter={16}>
+                        <Col span={8}>
+                            <Item
+                                label='商品轮播图'
+                                name='carousel'
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: '商品轮播图不能为空'
+                                    }
+                                ]}
+                            >
+                                <Upload
+                                    fileList={carouselList}
+                                    listType="picture"
+                                    maxCount={5}
+                                    accept='.bmp,.jpg,.png,.tif,.gif,.pcx,.tga,.exif,.fpx,.svg,.psd,.cdr,.pcd,.dxf,.ufo,.eps,.ai,.raw,.WMF,.webp'
+                                    customRequest={e => changeCarousel(e)}
+                                >
+                                    <Button>上传轮播图</Button>
+                                </Upload>
+                            </Item>
+                        </Col>
+                    </Row>
                 </Card>
                 <Card title="商品参数">
                     <Row gutter={16}>
                         <Col span={24}>
                             可选参数：
-                            {/*<Group options={goodsArgsList} checked={argsId} onChange={changeArgsId} />*/}
                             <Row>
                                 {
                                     goodsArgsList.map(item => {

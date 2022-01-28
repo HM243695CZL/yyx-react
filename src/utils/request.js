@@ -55,6 +55,8 @@ service.interceptors.response.use(
     error => {
         if (error.message === 'Network Error') {
             message.error('网络错误，请检查网络环境')
+        } else if (error.message.indexOf('timeout of') > -1) {
+            message.error(error.message);
         } else if (error.response.data.code === 401) {
             // token超时，跳转到登录
             message.error('token已过期，请重新登录');
