@@ -45,6 +45,11 @@ const GoodsInfo = props => {
             setCoverImgId(res.data.id);
         })
     };
+    const removeCoverImg = file => {
+        setFileList([]);
+        setCoverImgId('');
+        return true;
+    };
     const changeCarousel = files => {
         const { file } = files;
         let formData = new FormData();
@@ -118,6 +123,10 @@ const GoodsInfo = props => {
     };
     const clickConfirm = () => {
         form.validateFields().then(val => {
+            if (coverImgId === '') {
+                message.error('商品封面不能为空');
+                return false;
+            }
             let obj = {
                 ...val,
                 coverImgId,
@@ -197,6 +206,19 @@ const GoodsInfo = props => {
                     ]);
                     setFreeShopping(res.data.freeShopping);
                     setCoverImgId(id);
+                    let carouselArr = [];
+                    let carouselIdArr = [];
+                    res.data.carouselSource.map(item => {
+                        carouselIdArr.push(item.id);
+                        carouselArr.push({
+                            uid: item.id,
+                            name: item.originFileName,
+                            status: 'done',
+                            thumbUrl: `${window.PLATFORM_CONFIG.previewImgUrl}${item.newFileName}`
+                        });
+                    });
+                    setCarouselList([...carouselArr]);
+                    setCarouselImgId([...carouselIdArr]);
                     let arr = [];
                     JSON.parse(res.data.argsId).map(item => {
                        arr.push(item.value);
@@ -344,6 +366,7 @@ const GoodsInfo = props => {
                                     maxCount={1}
                                     accept='.bmp,.jpg,.png,.tif,.gif,.pcx,.tga,.exif,.fpx,.svg,.psd,.cdr,.pcd,.dxf,.ufo,.eps,.ai,.raw,.WMF,.webp'
                                     customRequest={e => customUploadImg(e)}
+                                    onRemove={e => removeCoverImg(e)}
                                 >
                                     <Button>上传封面</Button>
                                 </Upload>
@@ -374,6 +397,7 @@ const GoodsInfo = props => {
                                     fileList={carouselList}
                                     listType="picture"
                                     maxCount={5}
+                                    multiple
                                     accept='.bmp,.jpg,.png,.tif,.gif,.pcx,.tga,.exif,.fpx,.svg,.psd,.cdr,.pcd,.dxf,.ufo,.eps,.ai,.raw,.WMF,.webp'
                                     customRequest={e => changeCarousel(e)}
                                 >
