@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { Table, Button, message, Input, Form } from 'antd';
 import { cloneDeep } from 'loadsh';
 import dayjs from 'dayjs';
-import { getCategoryListPageApi, saveCategoryApi, updateCategoryApi,
+import { getCategoryPageApi, saveCategoryApi, updateCategoryApi,
     viewCategoryApi, delCategoryApi
 } from '@/api/category';
 import { viewFormConfigApi } from '@/api/formConfig';
@@ -81,7 +81,7 @@ const Category = props => {
                     delete pageInfo.filters[o];
                 }
             }
-            getCategoryListPageApi(pageInfo).then(res => {
+            getCategoryPageApi(pageInfo).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     setStateData({
                         ...stateData,

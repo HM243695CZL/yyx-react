@@ -1,10 +1,17 @@
 import request from '@/utils/request';
 
-export function getCategoryListPageApi(data) {
+export function getCategoryPageApi(data) {
     return request({
         url: '/category/page',
         method: 'post',
         data: request.adornData(data)
+    })
+}
+export function getCategoryListApi(params) {
+    return request({
+        url: '/category/list',
+        method: 'get',
+        data: request.adornParams(params)
     })
 }
 export function saveCategoryApi(data) {

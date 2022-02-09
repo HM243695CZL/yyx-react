@@ -8,6 +8,7 @@ import {withRouter} from 'react-router-dom';
 import {getGoodsTypeListApi} from '@/api/goodsType';
 import {getGoodsArgsListApi} from '@/api/goodsArgs';
 import {saveGoodsApi, viewGoodsApi, updateGoodsApi} from '@/api/goods';
+import {getCategoryListApi} from '@/api/category'
 import { uploadFileApi } from '@/api/common';
 import {RES_STATUS} from '@/utils/code';
 import { cutTagList, addTagList, changeCurrentPath} from '@/store/actions';
@@ -70,6 +71,15 @@ const GoodsInfo = props => {
             ]);
         })
     };
+    const removeCarouseList = file => {
+        carouselList.map((item, index) => {
+            if (item.uid === file.uid) {
+                carouselList.splice(index, 1);
+            }
+        });
+        setCarouselList([...carouselList]);
+        return true;
+    };
     const changeArgsId = (value, data) => {
         if (value.target.checked) {
             setArgsId([...argsId, data.value]);
@@ -123,8 +133,12 @@ const GoodsInfo = props => {
     };
     const clickConfirm = () => {
         form.validateFields().then(val => {
-            if (coverImgId === '') {
+            if (fileList.length === 0) {
                 message.error('商品封面不能为空');
+                return false;
+            }
+            if (carouselList.length === 0) {
+                message.error('商品轮播图不能为空');
                 return false;
             }
             let obj = {
@@ -158,6 +172,11 @@ const GoodsInfo = props => {
             }
         });
     };
+    const getCategoryList = () => {
+        getCategoryListApi().then(res => {
+            console.log(res);
+        })
+    };
     const getGoodsTypeList = () => {
         getGoodsTypeListApi().then(res => {
             if (res.code === RES_STATUS.SUCCESS_CODE) {
@@ -185,6 +204,7 @@ const GoodsInfo = props => {
         })
     };
     useEffect(() => {
+        getCategoryList();
         getGoodsTypeList();
         getGoodsArgsList();
         if (currentPath.indexOf('goods-id') > -1) {
@@ -398,6 +418,7 @@ const GoodsInfo = props => {
                                     listType="picture"
                                     maxCount={5}
                                     multiple
+                                    onRemove={e => removeCarouseList(e)}
                                     accept='.bmp,.jpg,.png,.tif,.gif,.pcx,.tga,.exif,.fpx,.svg,.psd,.cdr,.pcd,.dxf,.ufo,.eps,.ai,.raw,.WMF,.webp'
                                     customRequest={e => changeCarousel(e)}
                                 >
