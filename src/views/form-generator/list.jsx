@@ -67,10 +67,10 @@ const List = ({
                id
            }).then(res => {
                if (res.code === RES_STATUS.SUCCESS_CODE) {
-                   message.success(res.data.message);
+                   message.success(res.message);
                    getDataList(pageInfo);
                } else {
-                   message.error(res.data.message);
+                   message.error(res.message);
                }
            })
        }
@@ -90,10 +90,10 @@ const List = ({
             }
             getFormConfigListApi(pageInfo).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
-                    setDataList(res.data.dataList);
-                    setTotal(res.data.total);
+                    setDataList(res.datas.data);
+                    setTotal(res.datas.totalRecords);
                 } else {
-                    message.error(res.data.message);
+                    message.error(res.message);
                 }
             });
         });

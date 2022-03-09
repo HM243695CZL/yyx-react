@@ -45,15 +45,6 @@ const Menu = props => {
             dataIndex: 'sortNum'
         },
         {
-            title: '页面是否缓存',
-            dataIndex: 'keepAlive',
-            render: data => {
-                return (
-                    <span>{data ? <Tag color="#87d068">是</Tag> : <Tag color="#f50">否</Tag>}</span>
-                )
-            }
-        },
-        {
             title: '是否隐藏',
             dataIndex: 'hidden',
             render: data => {
@@ -85,7 +76,7 @@ const Menu = props => {
             }
             getMenuPageApi(pageInfo).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
-                    const data = arrayToTree(res.data.dataList, 'id', 'parentId');
+                    const data = arrayToTree(res.datas.data, 'id', 'parentId');
                     data.map(item => {
                         if(item.children && item.children.length) {
                             item.children.sort(objectArraySort('sortNum'))
@@ -95,7 +86,7 @@ const Menu = props => {
                     setStateData({
                         ...stateData,
                         dataList: data,
-                        total: res.data.total
+                        total: res.datas.totalRecords
                     });
                 }
             })
@@ -149,7 +140,7 @@ const Menu = props => {
         return e => {
             delMenuApi({id}).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
-                    message.success(res.data.message);
+                    message.success(res.message);
                     getDataList(pageInfo);
                 } else {
                     message.error(res.message);
@@ -161,7 +152,7 @@ const Menu = props => {
         if(val.id) {
             editMenuApi(val).then(res => {
                 if(res.code === RES_STATUS.SUCCESS_CODE) {
-                    message.success(res.data.message);
+                    message.success(res.message);
                     getDataList(pageInfo);
                     setIsVisible(false);
                 } else {
@@ -172,7 +163,7 @@ const Menu = props => {
             delete val.id;
             saveMenuApi(val).then(res => {
                 if(res.code === RES_STATUS.SUCCESS_CODE) {
-                    message.success(res.data.message);
+                    message.success(res.message);
                     getDataList(pageInfo);
                     setIsVisible(false);
                 } else {

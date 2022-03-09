@@ -33,7 +33,7 @@ export function editMenuApi(data) {
 export function delMenuApi(params) {
     return request({
         url: '/menu/delete',
-        method: 'post',
+        method: 'get',
         params
     })
 }
@@ -41,7 +41,7 @@ export function delMenuApi(params) {
 export function viewMenuApi(params) {
     return request({
         url: '/menu/view',
-        method: 'post',
+        method: 'get',
         params
     })
 }

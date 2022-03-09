@@ -68,8 +68,8 @@ const GoodsType = props => {
         viewFormConfigApi({
             formKey: store.getState().user.formInfo.GoodsTypeFormKey
         }).then(res => {
-            if (res.code === RES_STATUS.SUCCESS_CODE && res.data) {
-                setRenderList(JSON.parse(res.data.configData));
+            if (res.code === RES_STATUS.SUCCESS_CODE && res.datas) {
+                setRenderList(JSON.parse(res.datas.configData));
             } else {
                 message.error(`获取表单配置失败，
                 请检查"表单生成器"中的数据，当前接口的formKey为：
@@ -90,8 +90,8 @@ const GoodsType = props => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     setStateData({
                         ...stateData,
-                        dataList: res.data.dataList,
-                        total: res.data.total
+                        dataList: res.datas.data,
+                        total: res.datas.totalRecords
                     })
                 }
             })
@@ -144,7 +144,7 @@ const GoodsType = props => {
         return e => {
             delGoodsTypeApi({id}).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
-                    message.success(res.data.message);
+                    message.success(res.message);
                     getDataList(pageInfo);
                 } else {
                     message.error(res.message)
@@ -156,7 +156,7 @@ const GoodsType = props => {
         if (val.id) {
             updateGoodsTypeApi(val).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
-                    message.success(res.data.message);
+                    message.success(res.message);
                     getDataList(pageInfo);
                     setIsVisible(false);
                 } else {
@@ -166,7 +166,7 @@ const GoodsType = props => {
         } else {
             saveGoodsTypeApi(val).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
-                    message.success(res.data.message);
+                    message.success(res.message);
                     getDataList(pageInfo);
                     setIsVisible(false);
                 } else {

@@ -27,12 +27,12 @@ const OperateMenu = ({
                 page: 0,
                 size: 10
             }).then(res => {
-                const data = res.data.filter(ele => ele.id !== menuId);
+                const data = res.datas.filter(ele => ele.id !== menuId);
                 setParentMenu(arrayToTree(data, 'id', 'parentId'));
             });
             getIconListApi().then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
-                    setIconList(res.data);
+                    setIconList([...res.datas]);
                 }
             });
             if (menuId) {
@@ -40,7 +40,7 @@ const OperateMenu = ({
                     id: menuId
                 }).then(res => {
                     if (res.code === RES_STATUS.SUCCESS_CODE) {
-                        setInit(res.data);
+                        setInit(res.datas);
                         form.resetFields();
                         form.setFieldsValue(init);
                     }
@@ -81,11 +81,11 @@ const OperateMenu = ({
     const confirmIcon = icon => {
         setInit({
             ...init,
-            icon
+            icon: icon.iconName
         });
         form.setFieldsValue({
             ...init,
-            icon
+            icon: icon.iconName
         });
         closeIcon();
     };
@@ -178,13 +178,6 @@ const OperateMenu = ({
                         <InputNumber className='w100' min={1} placeholder='数字越小越靠上' autoComplete='off'/>
                     </Item>
                     <Item
-                        label='是否缓存'
-                        name='keepAlive'
-                        valuePropName='checked'
-                    >
-                        <Switch defaultChecked={init.keepAlive}/>
-                    </Item>
-                    <Item
                         label='是否隐藏'
                         name='hidden'
                         valuePropName='checked'
@@ -208,14 +201,14 @@ const OperateMenu = ({
                         iconList.map(item => {
                             return (
                                 <li
-                                    key={item}
-                                    title={item}
+                                    key={item.iconName}
+                                    title={item.iconName}
                                     onClick={e => confirmIcon(item)}
                                     className={cx({
-                                        'active': init.icon === item
+                                        'active': init.icon === item.iconName
                                     })}>
                                     <i className={
-                                        cx('fa fa-' + item)
+                                        cx('fa fa-' + item.iconName)
                                     } />
                                 </li>
                             )

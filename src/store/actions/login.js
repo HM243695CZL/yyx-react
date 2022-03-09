@@ -18,7 +18,7 @@ const login = params => dispatch => {
                 //     type: SET_USER_INFO,
                 //     payload: res.data.userInfo
                 // });
-                localStorage.setItem('token', res.data);
+                localStorage.setItem('token', res.datas.access_token);
             }
             resolve(res);
         })

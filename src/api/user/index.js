@@ -32,14 +32,22 @@ export function updateUserApi(data) {
 export function deleteUserApi(params) {
     return request({
         url: '/user/delete',
-        method: 'post',
+        method: 'get',
         params
     })
 }
 export function viewUserApi(params) {
     return request({
         url: '/user/view',
-        method: 'post',
+        method: 'get',
         params
+    })
+}
+
+export function changeStatusApi(data) {
+    return request({
+        url: '/user/changeStatus',
+        method: 'post',
+        data: request.adornData(data)
     })
 }

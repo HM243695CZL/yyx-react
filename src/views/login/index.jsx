@@ -41,7 +41,7 @@ class Login extends Component {
     getMenuList = () => {
         getMenuListApi().then(res => {
             if (res.code === RES_STATUS.SUCCESS_CODE) {
-                let data = arrayToTree(res.data, 'id', 'parentId')
+                let data = arrayToTree(res.datas, 'id', 'parentId')
                 data.map(item => {
                     if(item.children && item.children.length) {
                         item.children.sort(objectArraySort('sortNum'))

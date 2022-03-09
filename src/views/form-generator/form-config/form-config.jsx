@@ -134,9 +134,9 @@ const FormConfig = ({
                     }).then(res => {
                         if(res.code === RES_STATUS.SUCCESS_CODE) {
                             changeFlag();
-                            message.success(res.data.message);
+                            message.success(res.message);
                         } else {
-                            message.error(res.data.message);
+                            message.error(res.message);
                         }
                     })
                 } else {
@@ -147,9 +147,9 @@ const FormConfig = ({
                     }).then(res => {
                         if(res.code === RES_STATUS.SUCCESS_CODE) {
                             changeFlag();
-                            message.success(res.data.message);
+                            message.success(res.message);
                         } else {
-                            message.error(res.data.message);
+                            message.error(res.message);
                         }
                     })
                 }

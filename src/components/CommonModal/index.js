@@ -30,7 +30,7 @@ const CommonModal = ({
                     if (res.code === RES_STATUS.SUCCESS_CODE) {
                         let params = {};
                         fieldArr.map(item => {
-                            params[item] = res.data[item];
+                            params[item] = res.datas[item];
                         });
                         setValueObj(params);
                         setParams(params);

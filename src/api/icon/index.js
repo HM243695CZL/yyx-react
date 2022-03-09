@@ -26,7 +26,7 @@ export function saveIconApi(data) {
 export function delIconApi(params) {
     return request({
         url: '/icon/delete',
-        method: 'post',
+        method: 'get',
         params
     })
 }

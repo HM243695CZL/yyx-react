@@ -16,11 +16,11 @@ export function getFormConfigListApi(data) {
     })
 }
 
-export function deleteFormConfigApi(data) {
+export function deleteFormConfigApi(params) {
     return request({
         url: '/form-config/delete',
-        method: 'post',
-        data: request.adornData(data)
+        method: 'get',
+        params
     })
 }
 

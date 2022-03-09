@@ -83,19 +83,12 @@ service.adornUrl = (actionName) => {
  * get 请求参数处理
  */
 service.adornParams = (params = {}, openDefaultPrams = true) => {
-    let defaults = {
-        t: new Date().getTime()
-    };
-    return openDefaultPrams ? merge(defaults, params) : params
+    return params;
 };
 /**
  * post 请求数据处理
  */
-service.adornData = (data = {}, openDefaultdata = true, contentType = 'json') => {
-    let defaults = {
-        t: new Date().getTime()
-    };
-    data = openDefaultdata ? merge(defaults, data) : data;
+service.adornData = (data = {}, contentType = 'json') => {
     return contentType === 'json' ? JSON.stringify(data) : qs.stringify(data)
 };
 export default service;

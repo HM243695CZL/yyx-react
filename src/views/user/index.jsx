@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Tag, Table, Button, message, Input, Form } from 'antd';
 import { cloneDeep } from 'loadsh';
-import { getUserListPageApi, saveUserApi, updateUserApi, deleteUserApi, viewUserApi } from '@/api/user';
+import { getUserListPageApi, saveUserApi, updateUserApi, deleteUserApi, viewUserApi, changeStatusApi } from '@/api/user';
 import { viewFormConfigApi } from '@/api/formConfig';
 import { RES_STATUS, PageEntity, FilterEnum } from '@/utils/code';
 import { PaginationUtils } from '@/utils/PaginationUtils';
@@ -48,11 +48,14 @@ const User = props => {
         {
             title: '操作',
             key: 'action',
-            width: 120,
+            width: 150,
             render(data) {
                 return (
                     <div className='operate-column'>
                         <span className='operate-edit' onClick={showModal(data)}>修改</span>
+                        {
+                            data.status ? <span className='operate-edit' onClick={changeStatus(data)}>禁用</span> : <span className='operate-edit' onClick={changeStatus(data)}>启用</span>
+                        }
                         <span className="operate-del" onClick={delUser(data)}>删除</span>
                     </div>
                 )
@@ -63,8 +66,8 @@ const User = props => {
         viewFormConfigApi({
             formKey: store.getState().user.formInfo.UserFormKey
         }).then(res => {
-            if (res.code === RES_STATUS.SUCCESS_CODE && res.data) {
-                setRenderList(JSON.parse(res.data.configData));
+            if (res.code === RES_STATUS.SUCCESS_CODE && res.datas) {
+                setRenderList(JSON.parse(res.datas.configData));
             } else {
                 message.error(`获取表单配置失败，
                 请检查"表单生成器"中的数据! 当前接口的formKey为：
@@ -85,8 +88,8 @@ const User = props => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     setStateData({
                         ...stateData,
-                        dataList: res.data.dataList,
-                        total: res.data.total
+                        dataList: res.datas.data,
+                        total: res.datas.totalRecords
                     })
                 }
             })
@@ -113,11 +116,25 @@ const User = props => {
             }
         }
     };
+    const changeStatus = data => {
+        return e => {
+            changeStatusApi({
+                id: data.id
+            }).then(res => {
+                if (res.code === RES_STATUS.SUCCESS_CODE) {
+                    message.success(res.message);
+                    getDataList(pageInfo);
+                } else {
+                    message.error(res.message);
+                }
+            })
+        }
+    };
     const delUser = ({id}) => {
         return e => {
             deleteUserApi({id}).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
-                    message.success(res.data.message);
+                    message.success(res.message);
                     getDataList(pageInfo);
                 } else {
                     message.error(res.message);
@@ -129,7 +146,7 @@ const User = props => {
         if (val.id) {
             updateUserApi(val).then(res => {
                 if(res.code === RES_STATUS.SUCCESS_CODE) {
-                    message.success(res.data.message);
+                    message.success(res.message);
                     getDataList(pageInfo);
                     setIsVisible(false);
                 } else {
@@ -139,7 +156,7 @@ const User = props => {
         } else {
             saveUserApi(val).then(res => {
                 if(res.code === RES_STATUS.SUCCESS_CODE) {
-                    message.success(res.data.message);
+                    message.success(res.message);
                     getDataList(pageInfo);
                     setIsVisible(false);
                 } else {
