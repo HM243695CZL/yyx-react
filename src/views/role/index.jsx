@@ -2,10 +2,9 @@ import React, {useState, useEffect} from 'react';
 import { Table, Button, message, Input, Form } from 'antd';
 import { cloneDeep } from 'loadsh';
 import dayjs from 'dayjs';
-import {
-    getGoodsArgsListApi, delGoodsArgsApi, getGoodsArgsPageApi,
-    saveGoodsArgsApi, updateGoodsArgsApi, viewGoodsArgsApi
-} from '@/api/goodsArgs';
+import { getRolePageApi, saveRoleApi, updateRoleApi,
+    viewRoleApi, delRoleApi
+} from '@/api/role';
 import { viewFormConfigApi } from '@/api/formConfig';
 import { RES_STATUS, PageEntity, FilterEnum } from '@/utils/code';
 import { PaginationUtils } from '@/utils/PaginationUtils';
@@ -13,15 +12,17 @@ import MyPagination from '@/components/Pagination';
 import CommonModal from '@/components/CommonModal';
 import store from '@/store';
 import './index.less';
+
 const { Item } = Form;
-const GoodsArgs = props => {
+
+const Role = props => {
     const [form] = Form.useForm();
     const [stateData, setStateData] = useState({
         dataList: [],
         total: 0,
         title: '',
         id: null,
-        fieldArr: ['argsCnName', 'argsEnName']
+        fieldArr: ['name']
     });
     const [renderList, setRenderList] = useState([]);
     const [isVisible, setIsVisible] = useState(false);
@@ -33,12 +34,8 @@ const GoodsArgs = props => {
             render: (text, record, index) => <span>{index + 1}</span>
         },
         {
-            title: '参数中文名',
-            dataIndex: 'argsCnName'
-        },
-        {
-            title: '参数英文名',
-            dataIndex: 'argsEnName'
+            title: '角色名称',
+            dataIndex: 'name'
         },
         {
             title: '创建人',
@@ -57,7 +54,7 @@ const GoodsArgs = props => {
                 return (
                     <div className='operate-column'>
                         <span className='operate-edit' onClick={showModal(data)}>修改</span>
-                        <span className="operate-del" onClick={delGoodsArgs(data)}>删除</span>
+                        <span className="operate-del" onClick={delRole(data)}>删除</span>
                     </div>
                 )
             }
@@ -65,14 +62,14 @@ const GoodsArgs = props => {
     ];
     const getFormConfig = () => {
         viewFormConfigApi({
-            formKey: store.getState().user.formInfo.GoodsArgsFormKey
+            formKey: store.getState().user.formInfo.RoleFormKey
         }).then(res => {
             if (res.code === RES_STATUS.SUCCESS_CODE && res.datas) {
-                setRenderList(JSON.parse(res.datas.configData));
+                setRenderList(JSON.parse(res.datas.configData))
             } else {
                 message.error(`获取表单配置失败，
                 请检查"表单生成器"中的数据，当前接口的formKey为：
-                "${ store.getState().user.formInfo.GoodsArgsFormKey}"`);
+                "${ store.getState().user.formInfo.RoleFormKey}"`);
             }
         })
     };
@@ -85,7 +82,7 @@ const GoodsArgs = props => {
                     delete pageInfo.filters[o];
                 }
             }
-            getGoodsArgsPageApi(pageInfo).then(res => {
+            getRolePageApi(pageInfo).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     setStateData({
                         ...stateData,
@@ -102,15 +99,15 @@ const GoodsArgs = props => {
                 // 修改
                 setStateData({
                     ...stateData,
-                    title: '修改商品参数',
+                    title: '修改角色名称',
                     id: data.id
                 });
-                setIsVisible(true)
+                setIsVisible(true);
             } else {
                 // 新增
                 setStateData({
                     ...stateData,
-                    title: '新增商品参数',
+                    title: '新增角色名称',
                     id: null
                 });
                 setIsVisible(true);
@@ -139,9 +136,9 @@ const GoodsArgs = props => {
             first: 1
         });
     };
-    const delGoodsArgs = ({id}) => {
+    const delRole = ({id}) => {
         return e => {
-            delGoodsArgsApi({id}).then(res => {
+            delRoleApi({id}).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     message.success(res.message);
                     getDataList(pageInfo);
@@ -153,7 +150,7 @@ const GoodsArgs = props => {
     };
     const confirm = val => {
         if (val.id) {
-            updateGoodsArgsApi(val).then(res => {
+            updateRoleApi(val).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     message.success(res.message);
                     getDataList(pageInfo);
@@ -163,7 +160,7 @@ const GoodsArgs = props => {
                 }
             })
         } else {
-            saveGoodsArgsApi(val).then(res => {
+            saveRoleApi(val).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     message.success(res.message);
                     getDataList(pageInfo);
@@ -183,7 +180,7 @@ const GoodsArgs = props => {
     }, []);
     const { dataList, title, id, total, fieldArr } = stateData;
     return (
-        <div className='goods-args-container'>
+        <div className='role-container'>
             <div className='search-box'>
                 <Form
                     layout='inline'
@@ -193,14 +190,8 @@ const GoodsArgs = props => {
                     form={form}
                 >
                     <Item
-                        label='中文名'
-                        name='argsCnName'
-                    >
-                        <Input/>
-                    </Item>
-                    <Item
-                        label='英文名'
-                        name='argsEnName'
+                        label='角色名称'
+                        name='name'
                     >
                         <Input/>
                     </Item>
@@ -229,11 +220,11 @@ const GoodsArgs = props => {
                 renderList={renderList}
                 confirm={confirm}
                 cancel={cancel}
-                viewFunc={viewGoodsArgsApi}
+                viewFunc={viewRoleApi}
                 fieldArr={fieldArr}
             />
         </div>
     )
 };
 
-export default GoodsArgs;
+export default Role;

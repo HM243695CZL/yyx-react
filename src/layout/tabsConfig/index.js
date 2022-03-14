@@ -1,7 +1,8 @@
 import React from 'react';
 import {
     Dashboard, Menu, Table, TableInfo, FormGenerator, User,
-    Icon, Category, GoodsType, GoodsArgs, GoodsList, GoodsInfo
+    Icon, Category, GoodsType, GoodsArgs, GoodsList, GoodsInfo,
+    Role
 } from './importComp'
 
 export const getTabsComponent = key => {
@@ -38,6 +39,9 @@ export const getTabsComponent = key => {
             break;
         case '/user':
             tab.component = <User />;
+            break;
+        case '/role':
+            tab.component = <Role />;
             break;
         case '/icon':
             tab.component = <Icon />;

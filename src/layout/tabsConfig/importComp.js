@@ -62,3 +62,8 @@ export const GoodsInfo = Loadable({
     loading: Loading,
     delay: 150
 });
+export const Role = Loadable({
+    loader: () => import('@/views/role/index.jsx'),
+    loading: Loading,
+    delay: 150
+});
