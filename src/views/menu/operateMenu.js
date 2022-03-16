@@ -109,7 +109,7 @@ const OperateMenu = ({
                     <Item
                         label='类型'
                         name='type'
-                        rule={[]}
+                        rules={[]}
                     >
                         <Radio.Group value={1} onChange={e => changeRadio(e)}>
                             <Radio value={1}>菜单</Radio>

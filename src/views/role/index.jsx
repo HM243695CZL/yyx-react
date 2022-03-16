@@ -38,6 +38,10 @@ const Role = props => {
             dataIndex: 'name'
         },
         {
+            title: '备注',
+            dataIndex: 'remark'
+        },
+        {
             title: '创建人',
             dataIndex: 'createUser'
         },

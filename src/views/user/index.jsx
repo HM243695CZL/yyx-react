@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Tag, Table, Button, message, Input, Form } from 'antd';
 import { cloneDeep } from 'loadsh';
 import { getUserListPageApi, saveUserApi, updateUserApi, deleteUserApi, viewUserApi, changeStatusApi } from '@/api/user';
-import { viewFormConfigApi } from '@/api/formConfig';
 import { RES_STATUS, PageEntity, FilterEnum } from '@/utils/code';
 import { PaginationUtils } from '@/utils/PaginationUtils';
 import MyPagination from '@/components/Pagination';
-import CommonModal from '@/components/CommonModal';
-import store from '@/store';
+import OperateUser from './operate-user';
 import './index.less';
 const { Item } = Form;
 
@@ -18,9 +16,7 @@ const User = props => {
        total: 0,
        title: '',
        id: null,
-       fieldArr: ['username', 'password', 'email', 'mobile']
     });
-    const [renderList, setRenderList] = useState([]);
     const [isVisible, setIsVisible] = useState(false);
     const [pageInfo, setPageInfo] = useState(cloneDeep(PageEntity));
     const columns = [
@@ -31,6 +27,17 @@ const User = props => {
         {
             title: '邮箱',
             dataIndex: 'email'
+        },
+        {
+            title: '备注',
+            dataIndex: 'remark'
+        },
+        {
+            title: '所属角色',
+            dataIndex: 'roleNames',
+            render: data => {
+                return data.map(item => <Tag color='#52c41a'>{item}</Tag>)
+            }
         },
         {
             title: '手机号',
@@ -62,19 +69,6 @@ const User = props => {
             }
         }
     ];
-    const getFormConfig = () => {
-        viewFormConfigApi({
-            formKey: store.getState().user.formInfo.UserFormKey
-        }).then(res => {
-            if (res.code === RES_STATUS.SUCCESS_CODE && res.datas) {
-                setRenderList(JSON.parse(res.datas.configData));
-            } else {
-                message.error(`获取表单配置失败，
-                请检查"表单生成器"中的数据! 当前接口的formKey为：
-                "${ store.getState().user.formInfo.UserFormKey}"`);
-            }
-        })
-    };
     const getDataList = pageInfo => {
         form.validateFields().then(val => {
             for (const o in val) {
@@ -192,9 +186,8 @@ const User = props => {
     };
     useEffect(() => {
         getDataList(pageInfo);
-        getFormConfig();
     }, []);
-    const { dataList, title, id, total, fieldArr } = stateData;
+    const { dataList, title, id, total } = stateData;
     return (
         <div className='user-container'>
             <div className='search-box'>
@@ -229,15 +222,12 @@ const User = props => {
                 changePage={changePage}
                 total={total}
             />
-            <CommonModal
+            <OperateUser
                 title={title}
-                isVisible={isVisible}
-                id={id}
-                renderList={renderList}
+                isShow={isVisible}
+                userId={id}
                 confirm={confirm}
                 cancel={cancel}
-                viewFunc={viewUserApi}
-                fieldArr={fieldArr}
             />
         </div>
     )

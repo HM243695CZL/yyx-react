@@ -10,7 +10,7 @@ export function getRolePageApi(data) {
 
 export function getRoleListApi(params) {
     return request({
-        url: '/role/page',
+        url: '/role/list',
         method: 'get',
         data: request.adornParams(params)
     })
