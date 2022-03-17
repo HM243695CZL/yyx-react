@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Tag, Table, Button, message, Input, Form } from 'antd';
 import { cloneDeep } from 'loadsh';
-import { getUserListPageApi, saveUserApi, updateUserApi, deleteUserApi, viewUserApi, changeStatusApi } from '@/api/user';
+import {
+    getUserListPageApi, saveUserApi, updateUserApi,
+    deleteUserApi, viewUserApi, changeStatusApi, changePassApi
+} from '@/api/user';
+import {viewFormConfigApi } from '@/api/formConfig';
 import { RES_STATUS, PageEntity, FilterEnum } from '@/utils/code';
 import { PaginationUtils } from '@/utils/PaginationUtils';
 import MyPagination from '@/components/Pagination';
+import store from '@/store';
+import CommonModal from '@/components/CommonModal';
 import OperateUser from './operate-user';
 import './index.less';
 const { Item } = Form;
@@ -16,8 +22,13 @@ const User = props => {
        total: 0,
        title: '',
        id: null,
+        fieldArr: []
     });
     const [isVisible, setIsVisible] = useState(false);
+    const [renderList, setRenderList] = useState([]);
+    const [isPass, setIsPass] = useState(false);
+    const [titlePass] = useState('修改密码');
+    const [passId, setPassId] = useState();
     const [pageInfo, setPageInfo] = useState(cloneDeep(PageEntity));
     const columns = [
         {
@@ -35,9 +46,7 @@ const User = props => {
         {
             title: '所属角色',
             dataIndex: 'roleNames',
-            render: data => {
-                return data.map(item => <Tag color='#52c41a'>{item}</Tag>)
-            }
+            render: data => data.map(item => <Tag key={item} color='#52c41a'>{item}</Tag>)
         },
         {
             title: '手机号',
@@ -55,7 +64,7 @@ const User = props => {
         {
             title: '操作',
             key: 'action',
-            width: 150,
+            width: 240,
             render(data) {
                 return (
                     <div className='operate-column'>
@@ -63,12 +72,26 @@ const User = props => {
                         {
                             data.status ? <span className='operate-edit' onClick={changeStatus(data)}>禁用</span> : <span className='operate-edit' onClick={changeStatus(data)}>启用</span>
                         }
+                        <span className='operate-edit' onClick={showPassModal(data)}>修改密码</span>
                         <span className="operate-del" onClick={delUser(data)}>删除</span>
                     </div>
                 )
             }
         }
     ];
+    const getFormConfig = () => {
+        viewFormConfigApi({
+            formKey: store.getState().user.formInfo.EditPassFormKey
+        }).then(res => {
+            if (res.code === RES_STATUS.SUCCESS_CODE && res.datas) {
+                setRenderList(JSON.parse(res.datas.configData))
+            } else {
+                message.error(`获取表单配置失败，
+                请检查"表单生成器"中的数据，当前接口的formKey为：
+                "${ store.getState().user.formInfo.EditPassFormKey}"`);
+            }
+        })
+    };
     const getDataList = pageInfo => {
         form.validateFields().then(val => {
             for (const o in val) {
@@ -108,6 +131,12 @@ const User = props => {
                 });
                 setIsVisible(true);
             }
+        }
+    };
+    const showPassModal = data => {
+        return e => {
+            setIsPass(true);
+            setPassId(data.id);
         }
     };
     const changeStatus = data => {
@@ -162,6 +191,27 @@ const User = props => {
     const cancel = () => {
         setIsVisible(false);
     };
+    const confirmPass = val => {
+        if (val.password !== val.confirmPass) {
+            message.error('两次密码不一致');
+            return false;
+        }
+        changePassApi({
+            password: val.password,
+            id: passId
+        }).then(res => {
+            if (res.code === RES_STATUS.SUCCESS_CODE) {
+                message.success(res.message);
+                getDataList(pageInfo);
+                setIsPass(false);
+            } else {
+                message.error(res.message);
+            }
+        })
+    };
+    const cancelPass = () => {
+        setIsPass(false);
+    };
     const changePage = data => {
         let obj = {
             ...pageInfo,
@@ -186,8 +236,9 @@ const User = props => {
     };
     useEffect(() => {
         getDataList(pageInfo);
+        getFormConfig();
     }, []);
-    const { dataList, title, id, total } = stateData;
+    const { dataList, title, id, total, fieldArr } = stateData;
     return (
         <div className='user-container'>
             <div className='search-box'>
@@ -228,6 +279,15 @@ const User = props => {
                 userId={id}
                 confirm={confirm}
                 cancel={cancel}
+            />
+            <CommonModal
+                title={titlePass}
+                isVisible={isPass}
+                id=''
+                renderList={renderList}
+                confirm={confirmPass}
+                cancel={cancelPass}
+                fieldArr={fieldArr}
             />
         </div>
     )

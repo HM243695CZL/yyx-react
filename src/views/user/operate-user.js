@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Modal, Form, Input, Select, Switch, TreeSelect, Radio, InputNumber, Button} from 'antd';
+import {Modal, Form, Input, Select} from 'antd';
 import {viewUserApi } from '@/api/user';
 import { getRoleListApi } from '@/api/role';
-import cx from 'classnames'
 import {RES_STATUS} from '@/utils/code';
 
 const {Item} = Form;
@@ -96,10 +95,9 @@ const OperateUser = ({
                     <Item
                         label='角色'
                         name='roles'
-                        roles={[
+                        rules={[
                             {required: true, message: `请选择角色`}
                         ]}
-
                     >
                         <Select
                             mode='multiple'

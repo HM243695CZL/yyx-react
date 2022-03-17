@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import { Table, Button, message, Input, Form } from 'antd';
 import { cloneDeep } from 'loadsh';
-import dayjs from 'dayjs';
 import { getRolePageApi, saveRoleApi, updateRoleApi,
-    viewRoleApi, delRoleApi
+    viewRoleApi, delRoleApi, divideAuthApi
 } from '@/api/role';
+import DivideAuth from './divide-auth';
 import { viewFormConfigApi } from '@/api/formConfig';
 import { RES_STATUS, PageEntity, FilterEnum } from '@/utils/code';
 import { PaginationUtils } from '@/utils/PaginationUtils';
@@ -22,10 +22,14 @@ const Role = props => {
         total: 0,
         title: '',
         id: null,
-        fieldArr: ['name']
+        fieldArr: ['name', 'remark']
     });
     const [renderList, setRenderList] = useState([]);
     const [isVisible, setIsVisible] = useState(false);
+    const [divideObj, setDivideObj] = useState({
+        divideId: ''
+    });
+    const [showAuth, setShowAuth] = useState(false);
     const [pageInfo, setPageInfo] = useState(cloneDeep(PageEntity));
     const columns = [
         {
@@ -46,17 +50,13 @@ const Role = props => {
             dataIndex: 'createUser'
         },
         {
-            title: '创建时间',
-            dataIndex: 'createdTime',
-            render: data => <span>{ dayjs(data).format('YYYY-MM-DD HH:mm:ss')}</span>
-        },
-        {
             title: '操作',
             key: 'action',
-            width: 120,
+            width: 200,
             render(data) {
                 return (
                     <div className='operate-column'>
+                        <span className='operate-edit' onClick={divideAuth(data)}>分配权限</span>
                         <span className='operate-edit' onClick={showModal(data)}>修改</span>
                         <span className="operate-del" onClick={delRole(data)}>删除</span>
                     </div>
@@ -96,6 +96,15 @@ const Role = props => {
                 }
             })
         })
+    };
+    const divideAuth = data => {
+       return e => {
+           setDivideObj({
+               ...divideObj,
+               divideId: data.id
+           });
+           setShowAuth(true)
+       }
     };
     const showModal = data => {
         return e => {
@@ -175,6 +184,22 @@ const Role = props => {
             })
         }
     };
+    const divideAuthConfirm = val => {
+        divideAuthApi({
+            id: divideObj.divideId,
+            menus: val
+        }).then(res => {
+            if (res.code === RES_STATUS.SUCCESS_CODE) {
+                message.success(res.message);
+                setShowAuth(false);
+            } else {
+                message.error(res.message);
+            }
+        })
+    };
+    const divideAuthCancel = () => {
+        setShowAuth(false);
+    };
     const cancel = () => {
         setIsVisible(false);
     };
@@ -216,6 +241,13 @@ const Role = props => {
                 page={pageInfo.first}
                 changePage={changePage}
                 total={total}
+            />
+            <DivideAuth
+                title='分配权限'
+                divideObj={divideObj}
+                isShow={showAuth}
+                confirm={divideAuthConfirm}
+                cancel={divideAuthCancel}
             />
             <CommonModal
                 title={title}

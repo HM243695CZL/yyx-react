@@ -28,12 +28,12 @@ const userState = {
     token: '',
     userInfo: {},
     formInfo: {
-        UserFormKey: 'UserFormKey',
+        EditPassFormKey: 'EditPassFormKey',
         IconFormKey: 'IconFormKey',
         CategoryFormKey: 'CategoryFormKey',
         GoodsTypeFormKey: 'GoodsTypeFormKey',
         GoodsArgsFormKey: 'GoodsArgsFormKey',
-        RoleFormKey: 'RoleFormKey'
+        RoleFormKey: 'RoleFormKey',
     }
 };
 const user = (state = userState, action) => {

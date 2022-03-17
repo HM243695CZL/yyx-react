@@ -47,3 +47,19 @@ export function viewRoleApi(params) {
         params
     })
 }
+
+export function divideAuthApi(data) {
+    return request({
+        url: '/role/divideAuth',
+        method: 'post',
+        data
+    })
+}
+
+export function getDivideAuthApi(params) {
+    return request({
+        url: '/role/getDivideAuth',
+        method: 'get',
+        params
+    })
+}

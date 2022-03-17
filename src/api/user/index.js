@@ -51,3 +51,11 @@ export function changeStatusApi(data) {
         data: request.adornData(data)
     })
 }
+
+export function changePassApi(data) {
+    return request({
+        url: '/user/changePass',
+        method: 'post',
+        data: request.adornData(data)
+    })
+}
