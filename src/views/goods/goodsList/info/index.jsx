@@ -37,13 +37,13 @@ const GoodsInfo = props => {
         uploadFileApi(formData).then(res => {
             setFileList([
                 {
-                    uid: res.data.id,
+                    uid: res.datas.id,
                     name: file.name,
-                    thumbUrl: `${window.PLATFORM_CONFIG.previewImgUrl}${res.data.newFileName}`,
+                    thumbUrl: `${window.PLATFORM_CONFIG.previewImgUrl}${res.datas.newFileName}`,
                     status: 'done'
                 }
             ]);
-            setCoverImgId(res.data.id);
+            setCoverImgId(res.datas.id);
         })
     };
     const removeCoverImg = file => {
@@ -59,15 +59,15 @@ const GoodsInfo = props => {
             setCarouselList([
                 ...carouselList,
                 {
-                    uid: res.data.id,
+                    uid: res.datas.id,
                     name: file.name,
-                    thumbUrl: `${window.PLATFORM_CONFIG.previewImgUrl}${res.data.newFileName}`,
+                    thumbUrl: `${window.PLATFORM_CONFIG.previewImgUrl}${res.datas.newFileName}`,
                     status: 'done'
                 }
             ]);
             setCarouselImgId([
                 ...carouselImgId,
-                res.data.id
+                res.datas.id
             ]);
         })
     };
@@ -154,7 +154,7 @@ const GoodsInfo = props => {
                     id: goodsId
                 }).then(res => {
                     if (res.code === RES_STATUS.SUCCESS_CODE) {
-                        message.success(res.data.message);
+                        message.success(res.datas.message);
                         clickCancel();
                     } else {
                         message.error(res.message);
@@ -163,7 +163,7 @@ const GoodsInfo = props => {
             } else {
                 saveGoodsApi(obj).then(res => {
                     if (res.code === RES_STATUS.SUCCESS_CODE) {
-                        message.success(res.data.message);
+                        message.success(res.datas.message);
                         clickCancel();
                     } else {
                         message.error(res.message);
@@ -180,7 +180,7 @@ const GoodsInfo = props => {
     const getGoodsTypeList = () => {
         getGoodsTypeListApi().then(res => {
             if (res.code === RES_STATUS.SUCCESS_CODE) {
-                setGoodsTypeList(res.data);
+                setGoodsTypeList(res.datas);
             } else {
                 message.error(res.message);
             }
@@ -190,7 +190,7 @@ const GoodsInfo = props => {
         getGoodsArgsListApi().then(res => {
             if (res.code === RES_STATUS.SUCCESS_CODE) {
                 let arr = [];
-                res.data.map(item => {
+                res.datas.map(item => {
                     arr.push({
                         label: item.argsCnName,
                         value: item.id,
@@ -214,8 +214,8 @@ const GoodsInfo = props => {
                 id: currentPath.split('=')[1]
             }).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
-                    const { id, originFileName, newFileName } = res.data.source;
-                    form.setFieldsValue(res.data);
+                    const { id, originFileName, newFileName } = res.datas.source;
+                    form.setFieldsValue(res.datas);
                     setFileList([
                         {
                             uid: id,
@@ -224,11 +224,11 @@ const GoodsInfo = props => {
                             thumbUrl: `${window.PLATFORM_CONFIG.previewImgUrl}${newFileName}`
                         }
                     ]);
-                    setFreeShopping(res.data.freeShopping);
+                    setFreeShopping(res.datas.freeShopping);
                     setCoverImgId(id);
                     let carouselArr = [];
                     let carouselIdArr = [];
-                    res.data.carouselSource.map(item => {
+                    res.datas.carouselSource.map(item => {
                         carouselIdArr.push(item.id);
                         carouselArr.push({
                             uid: item.id,
@@ -240,11 +240,11 @@ const GoodsInfo = props => {
                     setCarouselList([...carouselArr]);
                     setCarouselImgId([...carouselIdArr]);
                     let arr = [];
-                    JSON.parse(res.data.argsId).map(item => {
+                    JSON.parse(res.datas.argsId).map(item => {
                        arr.push(item.value);
                     });
                     setArgsId([...arr]);
-                    setArgsArrItem(JSON.parse(res.data.argsId));
+                    setArgsArrItem(JSON.parse(res.datas.argsId));
                 }
             })
         }

@@ -100,7 +100,7 @@ const GoodsList = props => {
     const getGoodsTypeList = () => {
         getGoodsTypeListApi().then(res => {
             if (res.code === RES_STATUS.SUCCESS_CODE) {
-                setGoodsTypeList(res.data);
+                setGoodsTypeList(res.datas);
             }
         });
     };
@@ -122,8 +122,8 @@ const GoodsList = props => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     setStateData({
                         ...stateData,
-                        dataList: res.data.dataList,
-                        total: res.data.total
+                        dataList: res.datas.dataList,
+                        total: res.datas.totalRecords
                     })
                 }
             })
@@ -183,7 +183,7 @@ const GoodsList = props => {
             id: data.id
         }).then( res => {
             if (res.code === RES_STATUS.SUCCESS_CODE) {
-                message.success(res.data.message);
+                message.success(res.datas.message);
                 getDataList(pageInfo);
             } else {
                 message.error(res.message);
@@ -216,7 +216,7 @@ const GoodsList = props => {
         return e => {
             delGoodsApi({id}).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
-                    message.success(res.data.message);
+                    message.success(res.datas.message);
                     getDataList(pageInfo);
                 } else {
                     message.error(res.message)
