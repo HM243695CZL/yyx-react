@@ -8,7 +8,6 @@ import {login} from '@/store/actions';
 import {particles} from './params';
 import './index.less'
 import {RES_STATUS} from '@/utils/code';
-import {getMenuListApi} from '@/api/menu'
 import {arrayToTree, setMenu, objectArraySort} from '@/utils';
 
 class Login extends Component {
@@ -31,31 +30,13 @@ class Login extends Component {
         handleLogin(formVal).then(res => {
             if(res.code === RES_STATUS.SUCCESS_CODE) {
                 // 获取菜单列表
-                this.getMenuList();
+                const {history} = this.props;
+                history.replace('/dashboard');
             } else {
                 message.error(res.message);
             }
         });
     };
-
-    getMenuList = () => {
-        getMenuListApi().then(res => {
-            if (res.code === RES_STATUS.SUCCESS_CODE) {
-                let data = arrayToTree(res.datas, 'id', 'parentId');
-                data.map(item => {
-                    if(item.children && item.children.length) {
-                        item.children.sort(objectArraySort('sortNum'))
-                    }
-                });
-                setMenu(JSON.stringify(data.sort(objectArraySort('sortNum'))));
-                const {history} = this.props;
-                history.replace('/dashboard');
-                // 通过重新刷新来实现路由表的渲染
-                // window.location.reload();
-            }
-        })
-    };
-
     render() {
         const layout = {
             labelCol: {
