@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Button, message, Table, Tag, Input, Form, Upload } from 'antd';
 import {getMenuListApi, getMenuPageApi, saveMenuApi, delMenuApi, editMenuApi} from '@/api/menu';
-import { uploadFileApi } from '@/api/common';
+import { uploadOneFileApi } from '@/api/common';
 import MyPagination from '@/components/Pagination';
 import OperateMenu from './operateMenu'
 import {RES_STATUS,  PageEntity, FilterEnum} from '@/utils/code';
@@ -183,7 +183,7 @@ const Menu = props => {
         const { file } = files;
         let formData = new FormData();
         formData.append('file', file);
-        uploadFileApi(formData).then(res => {
+        uploadOneFileApi(formData).then(res => {
             setFileList([...fileList, {
                 uid: res.data.id,
                 name: file.name,

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Form, Input, Upload} from 'antd';
-import {uploadFileApi} from '@/api/common';
+import {uploadOneFileApi} from '@/api/common';
 import {UploadOutlined} from '@ant-design/icons';
 const {TextArea} = Input;
 const {Item} = Form;
@@ -57,7 +57,7 @@ const RenderItem = ({
                                                        let formData = new FormData();
                                                        formData.append('file', file);
                                                        formData.append('size', file.size);
-                                                       uploadFileApi(formData).then(res => {
+                                                       uploadOneFileApi(formData).then(res => {
                                                            uploadChange(res.data, item.__vModel__, file.name);
                                                        })
                                                    }

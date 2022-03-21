@@ -33,12 +33,12 @@ const GoodsArgs = props => {
             render: (text, record, index) => <span>{index + 1}</span>
         },
         {
-            title: '参数中文名',
-            dataIndex: 'argsCnName'
+            title: '参数名称',
+            dataIndex: 'argsName'
         },
         {
-            title: '参数英文名',
-            dataIndex: 'argsEnName'
+            title: '参数值',
+            dataIndex: 'argsValue'
         },
         {
             title: '创建人',

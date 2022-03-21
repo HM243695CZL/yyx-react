@@ -9,7 +9,7 @@ import {getGoodsTypeListApi} from '@/api/goodsType';
 import {getGoodsArgsListApi} from '@/api/goodsArgs';
 import {saveGoodsApi, viewGoodsApi, updateGoodsApi} from '@/api/goods';
 import {getCategoryListApi} from '@/api/category'
-import { uploadFileApi } from '@/api/common';
+import { uploadOneFileApi, uploadMoreFileApi } from '@/api/common';
 import {RES_STATUS} from '@/utils/code';
 import { cutTagList, addTagList, changeCurrentPath} from '@/store/actions';
 import './index.less';
@@ -25,7 +25,6 @@ const GoodsInfo = props => {
     const [goodsTypeList, setGoodsTypeList] = useState([]);
     const [goodsArgsList, setGoodsArgsList] = useState([]);
     const [argsId, setArgsId] = useState([]);
-    const [argsArrItem, setArgsArrItem] = useState([]);
     const [coverImgId, setCoverImgId] = useState('');
     const [carouselImgId, setCarouselImgId] = useState([]);
     const [freeShopping, setFreeShopping] = useState(true);
@@ -34,7 +33,7 @@ const GoodsInfo = props => {
         const { file } = files;
         let formData = new FormData();
         formData.append('file', file);
-        uploadFileApi(formData).then(res => {
+        uploadOneFileApi(formData).then(res => {
             setFileList([
                 {
                     uid: res.datas.id,
@@ -55,7 +54,7 @@ const GoodsInfo = props => {
         const { file } = files;
         let formData = new FormData();
         formData.append('file', file);
-        uploadFileApi(formData).then(res => {
+        uploadOneFileApi(formData).then(res => {
             setCarouselList([
                 ...carouselList,
                 {
@@ -83,14 +82,7 @@ const GoodsInfo = props => {
     const changeArgsId = (value, data) => {
         if (value.target.checked) {
             setArgsId([...argsId, data.value]);
-            setArgsArrItem([...argsArrItem, data]);
         } else {
-            argsArrItem.map((item, index) => {
-                if (item.value === data.value) {
-                    argsArrItem.splice(index, 1);
-                }
-            });
-            setArgsArrItem([...argsArrItem]);
             argsId.map((item, index) => {
                 if (item === data.value) {
                     argsId.splice(index, 1);
@@ -102,18 +94,9 @@ const GoodsInfo = props => {
     const changeFreeShopping = freeShoppingValue => {
         setFreeShopping(freeShoppingValue);
     };
-    const changeArgs = (value, data) => {
-        argsArrItem.map(item => {
-            if (item.value === data.value) {
-                item.val = value.target.value;
-            }
-        });
-        setArgsArrItem([...argsArrItem]);
-    };
     const clickCancel = () => {
         const length = tagList.length;
         if (length >= 2) {
-            console.log(tagList[length - 2].tabKey);
             props.history.push(tagList[length - 2].tabKey);
             changeCurrentPath({
                 tabKey: tagList[length - 2].tabKey
@@ -144,8 +127,8 @@ const GoodsInfo = props => {
             let obj = {
                 ...val,
                 coverImgId,
-                carousel: carouselImgId,
-                argsId: JSON.stringify(argsArrItem),
+                argsIds: argsId,
+                carousels: carouselImgId,
                 freeShopping: freeShopping ? 1 : 0
             };
             if (goodsId) {
@@ -154,7 +137,7 @@ const GoodsInfo = props => {
                     id: goodsId
                 }).then(res => {
                     if (res.code === RES_STATUS.SUCCESS_CODE) {
-                        message.success(res.datas.message);
+                        message.success(res.message);
                         clickCancel();
                     } else {
                         message.error(res.message);
@@ -163,7 +146,7 @@ const GoodsInfo = props => {
             } else {
                 saveGoodsApi(obj).then(res => {
                     if (res.code === RES_STATUS.SUCCESS_CODE) {
-                        message.success(res.datas.message);
+                        message.success(res.message);
                         clickCancel();
                     } else {
                         message.error(res.message);
@@ -192,9 +175,8 @@ const GoodsInfo = props => {
                 let arr = [];
                 res.datas.map(item => {
                     arr.push({
-                        label: item.argsCnName,
-                        value: item.id,
-                        text: item.argsEnName
+                        label: item.argsName + '：' + item.argsValue,
+                        value: item.id
                     })
                 });
                 setGoodsArgsList(arr);
@@ -215,7 +197,6 @@ const GoodsInfo = props => {
             }).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     const { id, originFileName, newFileName } = res.datas.source;
-                    form.setFieldsValue(res.datas);
                     setFileList([
                         {
                             uid: id,
@@ -239,12 +220,11 @@ const GoodsInfo = props => {
                     });
                     setCarouselList([...carouselArr]);
                     setCarouselImgId([...carouselIdArr]);
-                    let arr = [];
-                    JSON.parse(res.datas.argsId).map(item => {
-                       arr.push(item.value);
+                    setArgsId([...res.datas.argsId]);
+                    form.setFieldsValue({
+                        ...res.datas,
+                        carousels: carouselIdArr
                     });
-                    setArgsId([...arr]);
-                    setArgsArrItem(JSON.parse(res.datas.argsId));
                 }
             })
         }
@@ -405,7 +385,7 @@ const GoodsInfo = props => {
                         <Col span={8}>
                             <Item
                                 label='商品轮播图'
-                                name='carousel'
+                                name='carousels'
                                 rules={[
                                     {
                                         required: true,
@@ -446,20 +426,6 @@ const GoodsInfo = props => {
                                     })
                                 }
                             </Row>
-                            <div className='box'>
-                                {
-                                    argsArrItem.map(item => {
-                                        return (
-                                            <div className='args-box' key={item.value}>
-                                                <div className='key'>{item.label}：</div>
-                                                <div className='value'>
-                                                    <Input value={item.val} placeholder={item.text} onChange={e => changeArgs(e, item)}/>
-                                                </div>
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </div>
                         </Col>
                     </Row>
                 </Card>

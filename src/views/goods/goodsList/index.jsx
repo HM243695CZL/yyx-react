@@ -47,13 +47,10 @@ const GoodsList = props => {
         },
         {
             title: '售价',
-            dataIndex: 'sellPriceStart',
+            dataIndex: 'sellPrice',
             align: 'center',
             sorter: true,
-            filterMultiple: false,
-            render: (text, record) => {
-                return record.sellPriceStart + '-' + record.sellPriceEnd + '￥'
-            }
+            filterMultiple: false
         },
         {
             title: '销量',
@@ -122,7 +119,7 @@ const GoodsList = props => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
                     setStateData({
                         ...stateData,
-                        dataList: res.datas.dataList,
+                        dataList: res.datas.data,
                         total: res.datas.totalRecords
                     })
                 }
@@ -183,7 +180,7 @@ const GoodsList = props => {
             id: data.id
         }).then( res => {
             if (res.code === RES_STATUS.SUCCESS_CODE) {
-                message.success(res.datas.message);
+                message.success(res.message);
                 getDataList(pageInfo);
             } else {
                 message.error(res.message);
@@ -216,7 +213,7 @@ const GoodsList = props => {
         return e => {
             delGoodsApi({id}).then(res => {
                 if (res.code === RES_STATUS.SUCCESS_CODE) {
-                    message.success(res.datas.message);
+                    message.success(res.message);
                     getDataList(pageInfo);
                 } else {
                     message.error(res.message)

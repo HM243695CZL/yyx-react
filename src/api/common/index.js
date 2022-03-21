@@ -1,8 +1,16 @@
 import request from '@/utils/request'
 
-export function uploadFileApi(data) {
+export function uploadOneFileApi(data) {
     return request({
-        url: '/upload',
+        url: '/common/upload/one',
+        method: 'post',
+        data
+    })
+}
+
+export function uploadMoreFileApi(data) {
+    return request({
+        url: '/common/upload/more',
         method: 'post',
         data
     })
