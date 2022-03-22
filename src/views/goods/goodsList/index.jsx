@@ -46,11 +46,12 @@ const GoodsList = props => {
             render: (text, record) => <img className='thumb-img' src={window.PLATFORM_CONFIG.previewImgUrl + record.source.newFileName} alt=''/>
         },
         {
-            title: '售价',
-            dataIndex: 'sellPrice',
+            title: '原价',
+            dataIndex: 'originPrice',
             align: 'center',
             sorter: true,
-            filterMultiple: false
+            filterMultiple: false,
+            render: data => <span>{data} ￥</span>
         },
         {
             title: '销量',
