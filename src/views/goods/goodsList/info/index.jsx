@@ -287,12 +287,7 @@ const GoodsInfo = props => {
                             <Item
                                 label='商品售价上限'
                                 name='sellPriceEnd'
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: '商品售价上限不能为空'
-                                    }
-                                ]}
+                                rules={[]}
                             >
                                 <Input/>
                             </Item>
