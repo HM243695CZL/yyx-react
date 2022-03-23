@@ -76,7 +76,13 @@ const GoodsInfo = props => {
                 carouselList.splice(index, 1);
             }
         });
+        carouselImgId.map((item, index) => {
+            if (item === file.uid) {
+                carouselImgId.splice(index, 1);
+            }
+        });
         setCarouselList([...carouselList]);
+        setCarouselImgId([...carouselImgId]);
         return true;
     };
     const changeArgsId = (value, data) => {
